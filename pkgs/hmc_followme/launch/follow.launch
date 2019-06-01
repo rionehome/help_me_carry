@@ -1,0 +1,9 @@
+<launch>
+  <group ns="hmc_followme">
+    <node pkg="hmc_followme" name="hmc_Follow" respawn="true" output="screen" type="hmc_Follow"/>
+  </group>
+  <group ns="move">
+    <node pkg="move" name="MovementVelocityDesignation" output="screen" respawn="false" type="MovementVelocityDesignation"/>
+  </group>
+  <include file="$(find ydlidar)/launch/lidar.launch"/>
+</launch>

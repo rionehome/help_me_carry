@@ -8,9 +8,14 @@ project(hmc_followme)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  cv_bridge
   roscpp
-  rospy
+  sensor_msgs
+  std_msgs
+  ros_posenet
 )
+
+add_definitions(-std=c++11)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -188,11 +193,21 @@ include_directories(
 ## Testing ##
 #############
 
-## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_hmc_followme.cpp)
-# if(TARGET ${PROJECT_NAME}-test)
-#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
-# endif()
-
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+cmake_minimum_required( VERSION 2.8 )
+project( DisplayImage )
+set( OpenCV_DIR "/usr/local/include/opencv2/" )
+find_package( OpenCV REQUIRED )
+
+set(CMAKE_CXX_FLAGS "-pthread")
+
+add_executable(hmc_Follow src/Follow.cpp)
+target_link_libraries(hmc_Follow ${OpenCV_LIBS} ${catkin_LIBRARIES})
+add_executable(hmc_Follow_URG src/Follow_URG.cpp)
+target_link_libraries(hmc_Follow_URG  ${OpenCV_LIBS} ${catkin_LIBRARIES})
+
+add_executable(hmc_Follow_NiTE2 src/Follow_NiTE2.cpp)
+target_link_libraries(hmc_Follow_NiTE2 ${OpenCV_LIBS}  ${catkin_LIBRARIES})
+add_executable(hmc_Follow_ydlider src/Follow_ydlider.cpp)
+target_link_libraries(hmc_Follow_ydlider ${OpenCV_LIBS} ${catkin_LIBRARIES})

@@ -8,9 +8,14 @@ project(hmc_human_detection)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  cv_bridge
   roscpp
-  rospy
+  sensor_msgs
+  std_msgs
+  ros_posenet
 )
+
+add_definitions(-std=c++11)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -196,3 +201,11 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+project( DisplayImage )
+set( OpenCV_DIR "/usr/local/include/opencv2/" )
+find_package( OpenCV REQUIRED )
+
+set(CMAKE_CXX_FLAGS "-pthread")
+
+add_executable(hmc_human_detection_main src/human_detection_main.cpp)
+target_link_libraries(hmc_human_detection_main ${OpenCV_LIBS} ${catkin_LIBRARIES})
