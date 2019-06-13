@@ -1,1 +1,3 @@
 # Help Me Carry
+
+コミットはdevelopブランチで！！！
