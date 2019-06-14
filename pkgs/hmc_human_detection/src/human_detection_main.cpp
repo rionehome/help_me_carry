@@ -10,9 +10,9 @@
 #include <iostream>
 #include <cmath>
 #include <std_msgs/Int32.h>
-#include "ros_posenet/Keypoint.h"
-#include "ros_posenet/Poses.h"
-#include "ros_posenet/Pose.h"
+//#include "ros_posenet/Keypoint.h"
+//#include "ros_posenet/Poses.h"
+//#include "ros_posenet/Pose.h"
 #include <float.h>
 
 
