@@ -1,0 +1,20 @@
+<launch>
+	
+	<include file="$(find ydlidar)/launch/lidar.launch"/>
+	<include file="$(find freenect_launch)/launch/freenect.launch"/>
+	<include file="$(find turtlebot_bringup)/launch/minimal.launch"/>
+
+	<include file="$(find sound_system)/launch/sound_system.launch"/>
+	<include file="$(find sound_system)/launch/hotword.launch"/>
+
+	<node pkg="move" name="MovementVelocityDesignation" output="screen" respawn="false" type="MovementVelocityDesignation"/>
+
+	<node pkg="followme" name="Follow" respawn="true" output="screen" type="Follow"/>
+
+	<include file="$(find follow_me_nlp)/launch/follow_me_nlp.launch"/>
+
+	<include file="$(find help_me_nlp_first_half)/launch/help.launch"/>
+
+	<include file="$(find help_me_nlp_second_half)/launch/help_me_nlp_second_half.launch"/>
+
+</launch>
