@@ -1,0 +1,5 @@
+<launch>
+  <node name="follow_me_nlp_main" pkg="follow_me_nlp" type="main.py" output="screen" />
+  <node name="follow_me_nlp_speak" pkg="follow_me_nlp" type="speak.py" output="screen" />
+  <node name="follow_me_nlp_recognition_julius_english" pkg="follow_me_nlp" type="recognition_julius_english.py" output="screen" />
+</launch>
