@@ -61,12 +61,12 @@ class Recognition:
 		self.speech_recognition = data.data
 
 	def __init__(self):
-		rospy.init_node('follow_me_nlp_recognition', anonymous=True)
+		rospy.init_node('hmc_follow_me_nlp_recognition', anonymous=True)
 		self.model_path = '/usr/local/lib/python2.7/dist-packages/pocketsphinx/model' # 音響モデルのディレクトリの絶対パス
 		self.dictionary_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dictionary') # 辞書のディレクトリの絶対パス
-		rospy.Subscriber('follow_me_nlp/recognition_start', Bool, self.control)
-		rospy.Subscriber('follow_me_nlp/stop_recognition', String, self.control2)
-		self.pub = rospy.Publisher('follow_me_nlp/recognition_result', String, queue_size=10)
+		rospy.Subscriber('hmc_follow_me_nlp/recognition_start', Bool, self.control)
+		rospy.Subscriber('hmc_follow_me_nlp/stop_recognition', String, self.control2)
+		self.pub = rospy.Publisher('hmc_follow_me_nlp/recognition_result', String, queue_size=10)
 		self.speech = None
 		self.speech_recognition = False
 		print('== STOP RECOGNITION ==')

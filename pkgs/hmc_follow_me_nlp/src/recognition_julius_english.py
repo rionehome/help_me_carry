@@ -57,9 +57,9 @@ class Recognition:
 			print('== STOP RECOGNITION ==')
 
 	def __init__(self):
-		rospy.init_node('follow_me_nlp_recognition_julius_english', anonymous=True)
-		rospy.Subscriber('follow_me_nlp/recognition_start', Bool, self.control) # 音声認識開始の合図
-		self.pub = rospy.Publisher('follow_me_nlp/recognition_result', String, queue_size=10) # 音声認識結果
+		rospy.init_node('hmc_follow_me_nlp_recognition_julius_english', anonymous=True)
+		rospy.Subscriber('hmc_follow_me_nlp/recognition_start', Bool, self.control) # 音声認識開始の合図
+		self.pub = rospy.Publisher('hmc_follow_me_nlp/recognition_result', String, queue_size=10) # 音声認識結果
 
 		HOST = "localhost"
 		PORT = 10500

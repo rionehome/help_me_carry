@@ -25,9 +25,9 @@ class Speak:
 		self.pub_finish.publish(True)
 
 	def __init__(self):
-		rospy.init_node('follow_me_nlp_speak', anonymous=True)
-		rospy.Subscriber('follow_me_nlp/speak_sentence', String, self.callback)
-		self.pub_finish = rospy.Publisher('follow_me_nlp/finish_speaking', Bool, queue_size=10)
+		rospy.init_node('hmc_follow_me_nlp_speak', anonymous=True)
+		rospy.Subscriber('hmc_follow_me_nlp/speak_sentence', String, self.callback)
+		self.pub_finish = rospy.Publisher('hmc_follow_me_nlp/finish_speaking', Bool, queue_size=10)
 
 if __name__ == '__main__':
 	Speak()

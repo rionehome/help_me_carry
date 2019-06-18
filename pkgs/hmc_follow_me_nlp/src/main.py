@@ -134,9 +134,9 @@ class Follow_me_nlp:
 				print('== Stop follow me...... ==')
 				self.pub_nlp_first.publish('next')
 				self.pub_stop_recognition.publish('stop node')
-				os.system('rosnode kill follow_me_nlp_recognition')
-				os.system('rosnode kill follow_me_nlp_speak')
-				os.system('rosnode kill follow_me_nlp_main')
+				os.system('rosnode kill hmc_follow_me_nlp_recognition')
+				os.system('rosnode kill hmc_follow_me_nlp_speak')
+				os.system('rosnode kill hmc_follow_me_nlp_main')
 			# 'No'の時の処理
 			elif (answer == 'no') and (self.stop_flag == 'True'):
 				self.stop_flag = 'False'
@@ -157,14 +157,14 @@ class Follow_me_nlp:
 			pass
 
 	def __init__(self):
-		rospy.init_node('follow_me_nlp_main', anonymous=True)
-		rospy.Subscriber('follow_me_nlp/recognition_result', String, self.callback)
-		rospy.Subscriber("follow_me_nlp/finish_speaking", Bool, self.control) # 発話終了の合図
-		self.pub = rospy.Publisher('follow_me_nlp/follow_me', String, queue_size=10) # **制御にFollow me 開始停止の合図**
-		self.pub_speak = rospy.Publisher('follow_me_nlp/speak_sentence', String, queue_size=10)
-		self.pub_start = rospy.Publisher('follow_me_nlp/recognition_start', Bool, queue_size=10)
+		rospy.init_node('hmc_follow_me_nlp_main', anonymous=True)
+		rospy.Subscriber('hmc_follow_me_nlp/recognition_result', String, self.callback)
+		rospy.Subscriber("hmc_follow_me_nlp/finish_speaking", Bool, self.control) # 発話終了の合図
+		self.pub = rospy.Publisher('/follow_me/control', String, queue_size=10) # **制御にFollow me 開始停止の合図**
+		self.pub_speak = rospy.Publisher('hmc_follow_me_nlp/speak_sentence', String, queue_size=10)
+		self.pub_start = rospy.Publisher('hmc_follow_me_nlp/recognition_start', Bool, queue_size=10)
 		self.pub_nlp_first = rospy.Publisher('help_ctrl', String, queue_size=10)
-		self.pub_stop_recognition = rospy.Publisher("follow_me_nlp/stop_recognition", String, queue_size=10) # 音声認識のループを抜ける
+		self.pub_stop_recognition = rospy.Publisher("hmc_follow_me_nlp/stop_recognition", String, queue_size=10) # 音声認識のループを抜ける
 		self.follow_me_flag = 'False'
 		self.stop_flag = 'False'
 		self.log_file_flag = False # ログファイルを書き込みか追加か判定する
