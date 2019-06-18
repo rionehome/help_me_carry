@@ -65,6 +65,7 @@ def help():
                 get_txt('')
                 while(txt==''):#txt取得まで待機
                     continue
+                print(txt)
                 take_ans=''
                 place_list=['bed', 'kitchen', 'car', 'living room']
                 word_list=[]
@@ -136,13 +137,13 @@ def help():
             
             
     rospy.init_node('help_me_nlp_first_half_help', anonymous=True)
-    start_resume=rospy.Publisher('help_me_nlp_second_half/recognition_start', Bool, queue_size=10)#音声認識開始
+    start_resume=rospy.Publisher('txt_start', Bool, queue_size=10)#音声認識開始
     yes_no=rospy.Publisher('yes_no_start', Bool, queue_size=10)#yes_no取得開始
     send_place=rospy.Publisher('help_me_carry/send_place', String, queue_size=10)#場所情報送信
     speak=rospy.Publisher('help_me_nlp_second_half/speak_sentence', String, queue_size=10)#発話開始
     rospy.Subscriber('help_ctrl', String, start_speech)#起動用
     rospy.Subscriber('help_me_nlp_second_half/recognition_result', String, get_yesno)#yes_no
-    rospy.Subscriber('help_me_nlp_second_half/recognition_result', String, get_txt)#音声認識結果取得
+    rospy.Subscriber('recognition_txt', String, get_txt)#音声認識結果取得
     rospy.Subscriber('help_me_nlp_second_half/finish_speaking', Bool, finish_speaking)
     rospy.spin()
 

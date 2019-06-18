@@ -57,7 +57,7 @@ class Recognition:
 	self.speech_recognition = data.data
         
     def __init__(self):
-	rospy.init_node('follow_me_nlp_recognition', anonymous=True)
+	rospy.init_node('help_me_nlp_half_recog', anonymous=True)
 	self.model_path = get_model_path() # 音響モデルのディレクトリの絶対パス
 	self.dictionary_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dictionary') # 辞書のディレクトリの絶対パス
 	rospy.Subscriber('txt_start', Bool, self.control)
