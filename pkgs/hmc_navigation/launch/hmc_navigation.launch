@@ -1,0 +1,3 @@
+<launch>
+  <node name="hmc_navigation_main" pkg="hmc_navigation" type="main.py" output="screen" />
+</launch>
