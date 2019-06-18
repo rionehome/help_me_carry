@@ -24,7 +24,7 @@ roslaunch help_me_carry help.launch
 
 * **`recognition_txt`** 音声認識結果の受け取り（ std_msgs/String ）
 
-* **`help_me_nlp_second_half/finish_speaking` 発話終了を受け取る( std_msgs/Bool )
+* **`help_me_nlp_second_half/finish_speaking`** 発話終了を受け取る( std_msgs/Bool )
 
 ### Publish Topic
 
@@ -40,8 +40,8 @@ roslaunch help_me_carry help.launch
 **`name` resume_sphinx.py**
 
 ### Subscribe Topic
-* **`txt_start` ** 音声認識の開始を受け取る(std_msgs/Bool)
+* **`txt_start`** 音声認識の開始を受け取る(std_msgs/Bool)
 
 ### Publish Topic
-* **`recognition_txt` ** 音声認識結果を送信(std_msgs/String)
+* **`recognition_txt`** 音声認識結果を送信(std_msgs/String)
 
