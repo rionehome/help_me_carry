@@ -4,4 +4,6 @@
 その後、制御が目的地に着いたらメッセージを受け取り、人検出にメッセージを送る。
 
 ## Usage
-
+```
+roslaunch hmc_navigation hmc_navigation.launch
+```
