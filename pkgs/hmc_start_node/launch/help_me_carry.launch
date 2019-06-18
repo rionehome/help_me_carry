@@ -11,10 +11,9 @@
 
 	<node pkg="followme" name="Follow" respawn="true" output="screen" type="Follow"/>
 
-	<include file="$(find follow_me_nlp)/launch/follow_me_nlp.launch"/>
-
+	<include file="$(find hmc_follow_me_nlp)/launch/hmc_follow_me_nlp.launch"/>
 	<include file="$(find help_me_nlp_first_half)/launch/help.launch"/>
-
 	<include file="$(find help_me_nlp_second_half)/launch/help_me_nlp_second_half.launch"/>
+	<include file="$(find hmc_navigation)/launch/hmc_navigation.launch"/>
 
 </launch>
