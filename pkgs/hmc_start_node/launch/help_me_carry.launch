@@ -1,4 +1,6 @@
 <launch>
+
+	<node pkg="emergency_stop" name="emergency_stop" output="screen" respawn="false" type="emergency_stop.py"/>
 	
 	<include file="$(find ydlidar)/launch/lidar.launch"/>
 	<include file="$(find freenect_launch)/launch/freenect.launch"/>
