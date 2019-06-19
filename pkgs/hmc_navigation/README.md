@@ -7,3 +7,7 @@
 ```
 roslaunch hmc_navigation hmc_navigation.launch
 ```
+
+##
+navigationからのメッセージ受け取り
+`/navigation/goal`(std_msgs/Bool)
