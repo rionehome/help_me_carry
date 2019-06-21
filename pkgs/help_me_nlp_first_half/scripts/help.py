@@ -87,7 +87,9 @@ def help():
 					while (finish_speaking_flag != True):
 						continue
 
-					send_place.publish(word_list[0])
+					#send_place.publish(word_list[0])
+                                        request=rospy.ServiceProxy('/sound_sytem/nlp', String)
+                                        answer=request('Please go to {}'.format(word_list[0]))
 					start_flag = False
 					txt = ''
 					break
@@ -114,7 +116,9 @@ def help():
 								start_speaking('Sorry, I have no arm. So, I want you to put your bag on plate.')
 								while (finish_speaking_flag != True):
 									continue
-								send_place.publish(i)
+								#send_place.publish(i)
+                                                                request=rospy.ServiceProxy('/sound_sytem/nlp', String)
+                                                                answer=request('Please go to {}'.format(i))
 								start_flag = False
 								break
 						txt = ''
