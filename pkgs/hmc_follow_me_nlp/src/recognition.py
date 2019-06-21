@@ -63,7 +63,7 @@ class Recognition:
 
 	def control3(self, data):
 		if data.id == 0:
-			self.speech_recognition = data.data
+			self.speech_recognition = True
 
 	def __init__(self):
 		rospy.init_node('hmc_follow_me_nlp_recognition', anonymous=True)
