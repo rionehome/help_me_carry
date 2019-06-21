@@ -53,7 +53,7 @@ class Recognition:
 			self.client.send("RESUME\n")
 			print('== START RECOGNITION ==')
 		if data.data == False:
-			self.cliant("PAUSE\n")
+			self.client.send("PAUSE\n")
 			print('== STOP RECOGNITION ==')
 
 	def __init__(self):
