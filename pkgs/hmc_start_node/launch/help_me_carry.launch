@@ -10,14 +10,14 @@
 
 	<node pkg="move" name="MovementVelocityDesignation" output="screen" respawn="false" type="MovementVelocityDesignation"/>
     <node pkg="human_detection" name="human_detection" output="screen" respawn="false" type="human_detection_main"/>
-	<node pkg="followme" name="Follow" respawn="true" output="screen" type="Follow"/>
+	<node pkg="follow_me" name="Follow" respawn="true" output="screen" type="Follow"/>
 
 	<include file="$(find hmc_follow_me_nlp)/launch/hmc_follow_me_nlp.launch"/>
 	<include file="$(find help_me_nlp_first_half)/launch/help.launch"/>
 	<node pkg="hmc_human_detection" name="hmc_human_detection" output="screen" respawn="false" type="hmc_human_detection_main.py"/>
 	<include file="$(find help_me_nlp_second_half)/launch/help_me_nlp_second_half.launch"/>
 	<include file="$(find hmc_navigation)/launch/hmc_navigation.launch"/>
-	<include file="$(find sound_system_ros)/launch/navigation_demo.launch"/>
+	<include file="$(find sound_system)/launch/navigation_demo.launch"/>
 	<include file="$(find turtlebot_custom)/launch/bringup.launch"/>
 	<include file="$(find turtlebot_custom)/launch/gmapping_lidar.launch"/>
 
