@@ -7,6 +7,7 @@ from std_msgs.msg import String, Bool
 import datetime
 import os
 
+
 class Help_me_nlp_second_half:
 	# 発話してログファイルに書き込むの関数
 	def speak(self, sentence):
@@ -34,9 +35,11 @@ class Help_me_nlp_second_half:
 
 	# 目的地の近くで、もう一人のオペレーターを見つけたとき(画像認識からメッセージがきたとき)
 	def person_dictation_callback(self, message):
-		if message.id == 3:
+		if message.id == 3 and message.text == "success":
 			self.speak("Would you help carrying groceries into the house? Please answer yes or no.")
 			self.pub_start.publish(True)
+		if message.id == 3 and message.text == "failed":
+			self.speak("I couldn't find it.")
 
 	# Yes Noの音声認識結果を受け取る
 	def recognition_callback(self, data):
@@ -47,12 +50,12 @@ class Help_me_nlp_second_half:
 		# "yes"のとき
 		if answer == 'yes':
 			self.speak("Thank you. I will guide you to the car. Please follow me.")
-			self.pub_go_to_the_car.publish(True) # 制御班に車まで移動するメッセージを送る
+			self.pub_go_to_the_car.publish(True)  # 制御班に車まで移動するメッセージを送る
 			self.pub_stop_recognition.publish("stop node")
 		# "yes以外"
 		else:
 			self.speak("OK. Thank you.")
-			self.pub_find_person.publish(True) # 人に手伝ってもらえることに失敗
+			self.pub_find_person.publish(True)  # 人に手伝ってもらえることに失敗
 
 	def reach_car_callback(self, message):
 		self.speak("Here is the car.")
@@ -63,6 +66,7 @@ class Help_me_nlp_second_half:
 	# 発話の間待つ
 	def control(self, message):
 		self.speak_flag = message.data
+
 	def wait(self):
 		self.speak_flag = False
 		while self.speak_flag != True:
@@ -70,17 +74,21 @@ class Help_me_nlp_second_half:
 
 	def __init__(self):
 		rospy.init_node("help_me_nlp_second_half_main")
-		rospy.Subscriber("/help_me_carry/activate", Activate, self.person_dictation_callback) # 画像認識終了の合図 **画像**
-		rospy.Subscriber("help_me_nlp_second_half/finish_speaking", Bool, self.control) # 発話終了の合図
-		rospy.Subscriber("help_me_nlp_second_half/recognition_result", String, self.recognition_callback) # 音声認識結果
-		rospy.Subscriber("help_me_nlp_second_half/reach_car", Bool, self.reach_car_callback) # 車に着いた合図 **制御**
-		self.pub_speak = rospy.Publisher("help_me_nlp_second_half/speak_sentence", String, queue_size=10) # 発話する文章
+		rospy.Subscriber("/help_me_carry/activate", Activate, self.person_dictation_callback)  # 画像認識終了の合図 **画像**
+		rospy.Subscriber("help_me_nlp_second_half/finish_speaking", Bool, self.control)  # 発話終了の合図
+		rospy.Subscriber("help_me_nlp_second_half/recognition_result", String, self.recognition_callback)  # 音声認識結果
+		rospy.Subscriber("help_me_nlp_second_half/reach_car", Bool, self.reach_car_callback)  # 車に着いた合図 **制御**
+		self.pub_speak = rospy.Publisher("help_me_nlp_second_half/speak_sentence", String, queue_size=10)  # 発話する文章
 		self.pub_start = rospy.Publisher('help_me_nlp_second_half/recognition_start', Bool, queue_size=10)
-		self.pub_go_to_the_car = rospy.Publisher("help_me_nlp_second_half/go_to_the_car", Bool, queue_size=10) # 車まで移動を開始する合図 **制御**
-		self.pub_find_person = rospy.Publisher("help_me_nlp_second_half/find_person", Bool, queue_size=10) # 手伝ってくれる人がいたかどうかの合図 **画像**
-		self.pub_stop_recognition = rospy.Publisher("help_me_nlp_second_half/stop_recognition", String, queue_size=10) # 音声認識のループを抜ける
+		self.pub_go_to_the_car = rospy.Publisher("help_me_nlp_second_half/go_to_the_car", Bool,
+												 queue_size=10)  # 車まで移動を開始する合図 **制御**
+		self.pub_find_person = rospy.Publisher("help_me_nlp_second_half/find_person", Bool,
+											   queue_size=10)  # 手伝ってくれる人がいたかどうかの合図 **画像**
+		self.pub_stop_recognition = rospy.Publisher("help_me_nlp_second_half/stop_recognition", String,
+													queue_size=10)  # 音声認識のループを抜ける
 		self.speak_flag = False
-		self.log_file_name = "{}/log{}.txt".format(os.path.join(os.path.dirname(os.path.abspath(__file__)), "log"), datetime.datetime.now())
+		self.log_file_name = "{}/log{}.txt".format(os.path.join(os.path.dirname(os.path.abspath(__file__)), "log"),
+												   datetime.datetime.now())
 
 
 if __name__ == '__main__':

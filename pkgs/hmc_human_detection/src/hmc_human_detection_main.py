@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from hmc_start_node.msg import Activate
 import rospy
-from std_msgs.msg import String, Bool
+from std_msgs.msg import Bool
 
 
 def callback_activate(data):
@@ -11,16 +11,19 @@ def callback_activate(data):
 
 
 def callback_finish(data):
+	next = Activate
 	if data.data:
-		next = Activate
 		next.id = 3
 		next.text = "success"
-
+	else:
+		next.id = 3
+		next.text = "failed"
+	pub_next.publish(next)
 
 
 rospy.init_node("hmc_navigation_main", anonymous=True)
-# pub_place = rospy.Publisher("hmc_navigation_main/place", String, queue_size=10) # 目的地の文字列を送る
 pub_start = rospy.Publisher("/human_detection/start", Bool, queue_size=10)
+pub_next = rospy.Publisher('/help_me_carry/activate', Activate, queue_size=10)
 rospy.Subscriber("/help_me_carry/activate", Activate, callback_activate)
 rospy.Subscriber("/human_detection/finish", Bool, callback_finish)
 rospy.spin()
