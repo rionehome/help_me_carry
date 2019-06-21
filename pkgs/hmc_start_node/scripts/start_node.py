@@ -10,6 +10,6 @@ if __name__ == '__main__':
 
 	pub = rospy.Publisher('/help_me_carry/activate', Activate, queue_size=10)
 	time.sleep(1)
-	act = Activate
+	act = Activate()
 	act.id = 0
 	pub.publish(act)

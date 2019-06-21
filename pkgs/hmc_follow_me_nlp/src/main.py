@@ -134,7 +134,7 @@ class Follow_me_nlp:
 				self.pub.publish('stop') # 制御に'stop'をpublish (***follow me が終わる***)
 				self.speak('OK, I will stop. Please give me next command.')
 				print('== Stop follow me...... ==')
-				next = Activate
+				next = Activate()
 				next.id = 1
 				self.pub_nlp_first.publish(next)
 				self.pub_stop_recognition.publish('stop node')

@@ -63,6 +63,7 @@ class Recognition:
 
 	def control3(self, data):
 		if data.id == 0:
+			print "follow_me_nlp"
 			self.speech_recognition = True
 
 	def __init__(self):

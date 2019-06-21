@@ -11,11 +11,12 @@
 	<include file="$(find yes_no_recognition)/launch/yes_no_recognition.launch"/>
 
 	<node pkg="move" name="MovementVelocityDesignation" output="screen" respawn="false" type="MovementVelocityDesignation"/>
-
+    <node pkg="human_detection" name="human_detection" output="screen" respawn="false" type="human_detection_main"/>
 	<node pkg="followme" name="Follow" respawn="true" output="screen" type="Follow"/>
 
 	<include file="$(find hmc_follow_me_nlp)/launch/hmc_follow_me_nlp.launch"/>
 	<include file="$(find help_me_nlp_first_half)/launch/help.launch"/>
+	<node pkg="hmc_human_detection" name="hmc_human_detection" output="screen" respawn="false" type="hmc_human_detection_main.py"/>
 	<include file="$(find help_me_nlp_second_half)/launch/help_me_nlp_second_half.launch"/>
 	<include file="$(find hmc_navigation)/launch/hmc_navigation.launch"/>
 

@@ -15,7 +15,8 @@ dic_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dictionary'
 
 def help():
 	def start_speech(data):
-		if (data.id == 0):
+		if (data.id == 1):
+			print "first_nlp"
 			global start_flag
 			start_flag = True
 			main()

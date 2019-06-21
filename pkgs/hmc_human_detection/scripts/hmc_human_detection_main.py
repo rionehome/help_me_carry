@@ -7,11 +7,12 @@ from std_msgs.msg import Bool
 
 def callback_activate(data):
 	if data.id == 2:
+		print "human_detection_nlp"
 		pub_start.publish(True)
 
 
 def callback_finish(data):
-	next = Activate
+	next = Activate()
 	if data.data:
 		next.id = 3
 		next.text = "success"
