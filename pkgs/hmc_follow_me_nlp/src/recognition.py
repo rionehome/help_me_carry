@@ -7,6 +7,7 @@ from std_msgs.msg import String, Bool
 import os
 import sys
 from pocketsphinx import LiveSpeech
+from hmc_start_node.msg import Activate
 
 class Recognition:
 	# 音声認識
@@ -60,11 +61,16 @@ class Recognition:
 	def control2(self, data):
 		self.speech_recognition = data.data
 
+	def control3(self, data):
+		if data.id == 0:
+			self.speech_recognition = data.data
+
 	def __init__(self):
 		rospy.init_node('hmc_follow_me_nlp_recognition', anonymous=True)
-		self.model_path = '/usr/local/lib/python2.7/dist-packages/pocketsphinx/model' # 音響モデルのディレクトリの絶対パス
-		self.dictionary_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dictionary') # 辞書のディレクトリの絶対パス
+		self.model_path = '/usr/local/lib/python2.7/dist-packages/pocketsphinx/model'  # 音響モデルのディレクトリの絶対パス
+		self.dictionary_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dictionary')  # 辞書のディレクトリの絶対パス
 		rospy.Subscriber('hmc_follow_me_nlp/recognition_start', Bool, self.control)
+		rospy.Subscriber('/help_me_carry/activate', Activate, self.control3)
 		rospy.Subscriber('hmc_follow_me_nlp/stop_recognition', String, self.control2)
 		self.pub = rospy.Publisher('hmc_follow_me_nlp/recognition_result', String, queue_size=10)
 		self.speech = None

@@ -25,7 +25,8 @@ def callback_place(data):
 
 
 def callback_reach(data):
-	pub_reach.publish(True)
+	if data.data:
+		pub_reach.publish(True)
 
 
 rospy.init_node("hmc_navigation_main", anonymous=True)
