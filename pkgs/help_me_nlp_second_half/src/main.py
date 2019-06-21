@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Help me carry,　Help me carry 後半部分の自然言語処理
-
+from hmc_start_node.msg import Activate
 import rospy
 from std_msgs.msg import String, Bool
 import datetime
@@ -34,8 +34,9 @@ class Help_me_nlp_second_half:
 
 	# 目的地の近くで、もう一人のオペレーターを見つけたとき(画像認識からメッセージがきたとき)
 	def person_dictation_callback(self, message):
-		self.speak("Would you help carrying groceries into the house? Please answer yes or no.")
-		self.pub_start.publish(True)
+		if message.id == 3:
+			self.speak("Would you help carrying groceries into the house? Please answer yes or no.")
+			self.pub_start.publish(True)
 
 	# Yes Noの音声認識結果を受け取る
 	def recognition_callback(self, data):
@@ -69,7 +70,7 @@ class Help_me_nlp_second_half:
 
 	def __init__(self):
 		rospy.init_node("help_me_nlp_second_half_main")
-		rospy.Subscriber("help_me_nlp_second_half/person_dictation", Bool, self.person_dictation_callback) # 画像認識終了の合図 **画像**
+		rospy.Subscriber("/help_me_carry/activate", Activate, self.person_dictation_callback) # 画像認識終了の合図 **画像**
 		rospy.Subscriber("help_me_nlp_second_half/finish_speaking", Bool, self.control) # 発話終了の合図
 		rospy.Subscriber("help_me_nlp_second_half/recognition_result", String, self.recognition_callback) # 音声認識結果
 		rospy.Subscriber("help_me_nlp_second_half/reach_car", Bool, self.reach_car_callback) # 車に着いた合図 **制御**
