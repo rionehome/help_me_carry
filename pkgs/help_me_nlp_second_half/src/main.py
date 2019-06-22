@@ -27,28 +27,19 @@ class Help_me_nlp_second_half:
 			os.system('rosnode kill help_me_nlp_second_half_speak')
 			os.system('rosnode kill help_me_nlp_second_half_main')
 
-	# 発話してログファイルに書き込むの関数
+	# 発話してログファイルに書き込む関数
 	def speak(self, sentence):
-		self.log_file_spoke(sentence)
+		self.log_file(sentence, "s")
 		rospy.loginfo("robot spoke: %s", sentence)
 		self.pub_speak.publish(sentence)
 		self.wait()
 
 	# ログファイルの書き込みの関数
-	def log_file(self, sentence):
-		if os.path.exists(self.log_file_name) == True:
-			with open(self.log_file_name, "a") as f:
+	def log_file(self, sentence, judge):
+		with open(self.log_file_name, "a") as f:
+			if judge == "h":
 				f.write(str(datetime.datetime.now()) + "\t" + "robot heard:" + sentence + "\n")
-		else:
-			with open(self.log_file_name, "w") as f:
-				f.write(str(datetime.datetime.now()) + "\t" + "robot heard:" + sentence + "\n")
-
-	def log_file_spoke(self, sentence):
-		if os.path.exists(self.log_file_name) == True:
-			with open(self.log_file_name, "a") as f:
-				f.write(str(datetime.datetime.now()) + "\t" + "robot spoke:" + sentence + "\n")
-		else:
-			with open(self.log_file_name, "w") as f:
+			elif judge == "s":
 				f.write(str(datetime.datetime.now()) + "\t" + "robot spoke:" + sentence + "\n")
 
 	# 目的地の近くで、もう一人のオペレーターを見つけたとき(画像認識からメッセージがきたとき)
@@ -62,7 +53,7 @@ class Help_me_nlp_second_half:
 	# Yes Noの音声認識結果を受け取る
 	def recognition_callback(self, data):
 		answer = data.data
-		self.log_file(answer)
+		self.log_file(answer, "h")
 		rospy.loginfo("robot heard: %s", answer)
 
 		# "yes"のとき
