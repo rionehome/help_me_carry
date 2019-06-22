@@ -1,2 +1,0 @@
-2019-06-21 12:37:40.389524	robot heard:yes
-2019-06-21 12:37:40.391833	robot spoke:Sorry. I could not understand the command. Please say the command again.

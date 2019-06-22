@@ -1,4 +1,0 @@
-2019-06-21 16:06:34.728585	robot heard:stop following me
-2019-06-21 16:06:34.729164	robot spoke:Sorry. I could not understand the command. Please say the command again.
-2019-06-21 16:06:50.064047	robot heard:stop following me
-2019-06-21 16:06:50.064551	robot spoke:Sorry. I could not understand the command. Please say the command again.

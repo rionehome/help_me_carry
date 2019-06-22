@@ -54,28 +54,19 @@ class Follow_me_nlp:
 			cos = score / (length_d * length_d2)
 		return cos
 
-	# 発話してログファイルに書き込むの関数
+	# 発話してログファイルに書き込む関数
 	def speak(self, sentence):
-		self.log_file_spoke(sentence)
+		self.log_file(sentence, "s")
 		rospy.loginfo("robot spoke: %s", sentence)
 		self.pub_speak.publish(sentence)
 		self.wait()
 
 	# ログファイルの書き込みの関数
-	def log_file(self, sentence):
-		if os.path.exists(self.log_file_name) == True:
-			with open(self.log_file_name, "a") as f:
+	def log_file(self, sentence, judge):
+		with open(self.log_file_name, "a") as f:
+			if judge == "h":
 				f.write(str(datetime.datetime.now()) + "\t" + "robot heard:" + sentence + "\n")
-		else:
-			with open(self.log_file_name, "w") as f:
-				f.write(str(datetime.datetime.now()) + "\t" + "robot heard:" + sentence + "\n")
-
-	def log_file_spoke(self, sentence):
-		if os.path.exists(self.log_file_name) == True:
-			with open(self.log_file_name, "a") as f:
-				f.write(str(datetime.datetime.now()) + "\t" + "robot spoke:" + sentence + "\n")
-		else:
-			with open(self.log_file_name, "w") as f:
+			elif judge == "s":
 				f.write(str(datetime.datetime.now()) + "\t" + "robot spoke:" + sentence + "\n")
 
 	# 認識結果の文字列の処理
@@ -90,7 +81,7 @@ class Follow_me_nlp:
 			if level > max:
 				max = level
 				answer = q
-		self.log_file(answer)
+		self.log_file(answer, "h")
 		rospy.loginfo("robot heard: %s", answer)
 		self.judge(answer)
 
@@ -171,7 +162,6 @@ class Follow_me_nlp:
 		self.pub_stop_recognition = rospy.Publisher("hmc_follow_me_nlp/stop_recognition", String, queue_size=10) # 音声認識のループを抜ける
 		self.follow_me_flag = 'False'
 		self.stop_flag = 'False'
-		self.log_file_flag = False # ログファイルを書き込みか追加か判定する
 		self.speak_flag = False
 		self.log_file_name = "{}/log{}.txt".format(os.path.join(os.path.dirname(os.path.abspath(__file__)), "log"), datetime.datetime.now())
 
