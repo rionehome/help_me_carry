@@ -1,14 +1,32 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Help me carry,　Help me carry 後半部分の自然言語処理
+import time
+
 from hmc_start_node.msg import Activate
 import rospy
+from sound_system.srv import NLPService
 from std_msgs.msg import String, Bool
 import datetime
 import os
 
 
 class Help_me_nlp_second_half:
+	def send_place_msg(self, place):
+		# navigationに場所を伝える
+		rospy.wait_for_service('/sound_system/nlp', timeout=1)
+		response = rospy.ServiceProxy('/sound_system/nlp', NLPService)('Please go to {}'.format(place))
+		print response.response
+		if "OK" in response.response:
+			navigation_wait = True
+			while navigation_wait:
+				time.sleep(0.1)
+		else:
+			self.speak("Sorry, I could not  move to the car.")
+			os.system('rosnode kill help_me_nlp_second_half_recognition')
+			os.system('rosnode kill help_me_nlp_second_half_speak')
+			os.system('rosnode kill help_me_nlp_second_half_main')
+
 	# 発話してログファイルに書き込むの関数
 	def speak(self, sentence):
 		self.log_file_spoke(sentence)
@@ -50,15 +68,22 @@ class Help_me_nlp_second_half:
 		# "yes"のとき
 		if answer == 'yes':
 			self.speak("Thank you. I will guide you to the car. Please follow me.")
-			self.pub_go_to_the_car.publish(True)  # 制御班に車まで移動するメッセージを送る
 			self.pub_stop_recognition.publish("stop node")
+			# 場所の送信 & 移動
+			self.send_place_msg("car")
+
 		# "yes以外"
 		else:
 			self.speak("OK. Thank you.")
-			self.pub_find_person.publish(True)  # 人に手伝ってもらえることに失敗
+			back = Activate()
+			back.id = 2
+			self.pub_find_person.publish(back)  # 人に手伝ってもらえることに失敗
 
 	def reach_car_callback(self, message):
-		self.speak("Here is the car.")
+		if message.data:
+			self.speak("Here is the car.")
+		else:
+			self.speak("Sorry, I could not  move to the car.")
 		os.system('rosnode kill help_me_nlp_second_half_recognition')
 		os.system('rosnode kill help_me_nlp_second_half_speak')
 		os.system('rosnode kill help_me_nlp_second_half_main')
@@ -77,12 +102,10 @@ class Help_me_nlp_second_half:
 		rospy.Subscriber("/help_me_carry/activate", Activate, self.person_dictation_callback)  # 画像認識終了の合図 **画像**
 		rospy.Subscriber("help_me_nlp_second_half/finish_speaking", Bool, self.control)  # 発話終了の合図
 		rospy.Subscriber("help_me_nlp_second_half/recognition_result", String, self.recognition_callback)  # 音声認識結果
-		rospy.Subscriber("help_me_nlp_second_half/reach_car", Bool, self.reach_car_callback)  # 車に着いた合図 **制御**
+		rospy.Subscriber("/navigation/goal", Bool, self.reach_car_callback)  # 車に着いた合図 **制御**
 		self.pub_speak = rospy.Publisher("help_me_nlp_second_half/speak_sentence", String, queue_size=10)  # 発話する文章
 		self.pub_start = rospy.Publisher('help_me_nlp_second_half/recognition_start', Bool, queue_size=10)
-		self.pub_go_to_the_car = rospy.Publisher("help_me_nlp_second_half/go_to_the_car", Bool,
-												 queue_size=10)  # 車まで移動を開始する合図 **制御**
-		self.pub_find_person = rospy.Publisher("help_me_nlp_second_half/find_person", Bool,
+		self.pub_find_person = rospy.Publisher("/help_me_carry/activate", Activate,
 											   queue_size=10)  # 手伝ってくれる人がいたかどうかの合図 **画像**
 		self.pub_stop_recognition = rospy.Publisher("help_me_nlp_second_half/stop_recognition", String,
 													queue_size=10)  # 音声認識のループを抜ける
