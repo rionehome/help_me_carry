@@ -2,4 +2,4 @@
 grammar take_sphinx;
 public <rule> = <command> <place>;
 <command> = take this bag to the;
-<place> = sofa | kitchen | bed | book shelf | side shelf | living rack;
+<place> = sofa | kitchen | bed | book shelf | side shelf | living-rack;
