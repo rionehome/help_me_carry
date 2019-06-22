@@ -63,10 +63,18 @@ def help():
 
 	def send_place_msg(place):
 		# navigationに場所を伝える
-		rospy.ServiceProxy('/sound_sytem/nlp', NLPService)('Please go to {}'.format(place))
-		navigation_wait = True
-		while navigation_wait:
-			time.sleep(0.1)
+		rospy.wait_for_service('/sound_system/nlp', timeout=1)
+		response = rospy.ServiceProxy('/sound_system/nlp', NLPService)('Please go to {}'.format(place))
+		print response.response
+		if "OK" in response.response:
+			navigation_wait = True
+			while navigation_wait:
+				time.sleep(0.1)
+		else:
+			# 次のノードに処理を渡す
+			next = Activate()
+			next.id = 2
+			next_pub.publish(next)
 
 	def main():
 		while (1):
