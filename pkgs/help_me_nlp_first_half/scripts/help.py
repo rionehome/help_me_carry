@@ -13,14 +13,16 @@ loop_count = 0
 model_path = get_model_path()
 dic_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dictionary')
 navigation_wait = False
+activate = False
 
 
 def help():
 	def start_speech(data):
 		if (data.id == 1):
 			print "first_nlp"
-			global start_flag
+			global start_flag, activate
 			start_flag = True
+			activate = True
 			main()
 
 	def get_yesno(sentence):
@@ -56,12 +58,16 @@ def help():
 			return
 
 	def navigation_goal_callback(data):
-		# 次のノードに処理を渡す
-		next = Activate()
-		next.id = 2
-		next_pub.publish(next)
+		global activate
+		if activate:
+			# 次のノードに処理を渡す
+			next = Activate()
+			next.id = 2
+			next_pub.publish(next)
+			activate = False
 
 	def send_place_msg(place):
+		print place, "@help.py"
 		# navigationに場所を伝える
 		rospy.wait_for_service('/sound_system/nlp', timeout=1)
 		response = rospy.ServiceProxy('/sound_system/nlp', NLPService)('Please go to {}'.format(place))

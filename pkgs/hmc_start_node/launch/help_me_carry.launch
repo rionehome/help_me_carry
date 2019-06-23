@@ -3,12 +3,13 @@
 	<node pkg="emergency_stop" name="emergency_stop" output="screen" respawn="false" type="main.py"/>
 	
 	<include file="$(find freenect_launch)/launch/freenect.launch"/>
-	<include file="$(find turtlebot_custom)/launch/bringup.launch"/>
+	<include file="$(find turtlebot_bringup)/launch/minimal.launch"/>
 	<include file="$(find turtlebot_custom)/launch/gmapping_lidar.launch"/>
+	<include file="$(find turtlebot_custom)/launch/lidar.launch"/>
 
 	<include file="$(find yes_no_recognition)/launch/yes_no_recognition.launch"/>
 
-	<node pkg="move" name="MovementVelocityDesignation" output="screen" respawn="false" type="MovementVelocityDesignation"/>
+	<node pkg="move" name="MovementVelocityDesignation" respawn="false" type="MovementVelocityDesignation"/>
     <node pkg="human_detection" name="human_detection" output="screen" respawn="false" type="human_detection_main"/>
 	<node pkg="follow_me" name="Follow" respawn="true" output="screen" type="Follow"/>
 

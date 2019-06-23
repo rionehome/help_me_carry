@@ -1,0 +1,2 @@
+2019-06-23 13:22:10.047355	robot spoke:Here is the car.
+2019-06-23 13:22:12.098017	robot spoke:Would you help carrying groceries into the house? Please answer yes or no.

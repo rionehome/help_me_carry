@@ -1,0 +1,2 @@
+2019-06-23 13:12:44.439657	robot spoke:Sorry, I could not  move to the car.
+2019-06-23 13:12:46.572414	robot spoke:Would you help carrying groceries into the house? Please answer yes or no.

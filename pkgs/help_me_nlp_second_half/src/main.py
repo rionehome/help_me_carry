@@ -45,9 +45,11 @@ class Help_me_nlp_second_half:
 	# 目的地の近くで、もう一人のオペレーターを見つけたとき(画像認識からメッセージがきたとき)
 	def person_dictation_callback(self, message):
 		if message.id == 3 and message.text == "success":
+			self.node_activate = True
 			self.speak("Would you help carrying groceries into the house? Please answer yes or no.")
 			self.pub_start.publish(True)
 		if message.id == 3 and message.text == "failed":
+			self.node_activate = True
 			self.speak("I couldn't find it.")
 
 	# Yes Noの音声認識結果を受け取る
@@ -71,6 +73,8 @@ class Help_me_nlp_second_half:
 			self.pub_find_person.publish(back)  # 人に手伝ってもらえることに失敗
 
 	def reach_car_callback(self, message):
+		if not self.node_activate:
+			return
 		if message.data:
 			self.speak("Here is the car.")
 		else:
@@ -103,6 +107,7 @@ class Help_me_nlp_second_half:
 		self.speak_flag = False
 		self.log_file_name = "{}/log{}.txt".format(os.path.join(os.path.dirname(os.path.abspath(__file__)), "log"),
 												   datetime.datetime.now())
+		self.node_activate = False
 
 
 if __name__ == '__main__':

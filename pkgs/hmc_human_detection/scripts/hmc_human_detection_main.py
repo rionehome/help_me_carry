@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import time
+
 from hmc_start_node.msg import Activate
 import rospy
 from std_msgs.msg import Bool
@@ -8,6 +10,8 @@ from std_msgs.msg import Bool
 def callback_activate(data):
 	if data.id == 2:
 		print "human_detection_nlp"
+		time.sleep(3)
+		print "wait"
 		pub_start.publish(True)
 
 
