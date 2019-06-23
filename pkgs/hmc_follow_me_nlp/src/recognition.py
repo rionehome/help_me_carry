@@ -41,15 +41,15 @@ class Recognition:
 
 	# pauseかresumeの判定
 	def judge(self):
-		#stop_flag = False
+		stop_flag = False
 		while 1:
 			if self.speech_recognition == True:
 				self.resume()
 				self.recognition()
-				#stop_flag = False
-			#elif (self.speech_recognition == False) and (stop_flag == False):
-			#	self.pause()
-			#	stop_flag = True
+				stop_flag = False
+			elif (self.speech_recognition == False) and (stop_flag == False):
+				self.pause()
+				stop_flag = True
 			elif self.speech_recognition == "stop node":
 				print("dubug")
 				break
