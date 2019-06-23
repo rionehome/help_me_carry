@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Help me carry,　Help me carry 後半部分の自然言語処理
+from location.msg import Location
 import time
 
 from hmc_start_node.msg import Activate
@@ -14,6 +15,15 @@ import os
 class Help_me_nlp_second_half:
 	def send_place_msg(self, place):
 		# navigationに場所を伝える
+		pub_place = rospy.Publisher("/navigation/move_command", Location, queue_size=10)
+		time.sleep(1)
+		location = Location()
+		location.name = "car"
+		location.x = -2.9847061759
+		location.y = 1.26245978671
+		location.z = 0.0
+		pub_place.publish(location)
+		'''
 		rospy.wait_for_service('/sound_system/nlp', timeout=1)
 		response = rospy.ServiceProxy('/sound_system/nlp', NLPService)('Please go to {}'.format(place))
 		print response.response
@@ -26,6 +36,8 @@ class Help_me_nlp_second_half:
 			os.system('rosnode kill help_me_nlp_second_half_recognition')
 			os.system('rosnode kill help_me_nlp_second_half_speak')
 			os.system('rosnode kill help_me_nlp_second_half_main')
+		'''
+		pass
 
 	# 発話してログファイルに書き込む関数
 	def speak(self, sentence):
