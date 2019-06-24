@@ -5,6 +5,7 @@ from location.msg import Location
 import time
 
 from hmc_start_node.msg import Activate
+from location.srv import RequestLocation
 import rospy
 from sound_system.srv import NLPService
 from std_msgs.msg import String, Bool
@@ -15,7 +16,10 @@ import os
 class Help_me_nlp_second_half:
 	def send_place_msg(self, place):
 		# navigationに場所を伝える
-		pub_place = rospy.Publisher("/navigation/move_command", Location, queue_size=10)
+		sound_system_nlp = rospy.Publisher("/sound_system/nlp/request", String, queue_size=10)
+		time.sleep(1)
+		sound_system_nlp.publish('Please go to {}'.format(place))
+		'''
 		time.sleep(1)
 		location = Location()
 		location.name = "car"
@@ -23,7 +27,7 @@ class Help_me_nlp_second_half:
 		location.y = 1.26245978671
 		location.z = 0.0
 		pub_place.publish(location)
-		'''
+
 		rospy.wait_for_service('/sound_system/nlp', timeout=1)
 		response = rospy.ServiceProxy('/sound_system/nlp', NLPService)('Please go to {}'.format(place))
 		print response.response
@@ -36,6 +40,13 @@ class Help_me_nlp_second_half:
 			os.system('rosnode kill help_me_nlp_second_half_recognition')
 			os.system('rosnode kill help_me_nlp_second_half_speak')
 			os.system('rosnode kill help_me_nlp_second_half_main')
+			
+		rospy.wait_for_service("/navigation/request_location", timeout=1)
+		request_location = rospy.ServiceProxy("/navigation/request_location", RequestLocation)(place).location
+		print "Help_me_nlp_second_half", request_location
+		if request_location.name == place:
+			print "send place msg to navigation"
+			pub_place.publish(request_location)
 		'''
 		pass
 
