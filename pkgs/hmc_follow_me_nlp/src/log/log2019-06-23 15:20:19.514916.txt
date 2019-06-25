@@ -1,0 +1,9 @@
+2019-06-23 15:20:32.328268	robot heard:follow me
+2019-06-23 15:20:32.329273	robot spoke:Should I start following you?
+2019-06-23 15:20:37.910651	robot heard:yes
+2019-06-23 15:20:37.911195	robot spoke:When we arrive at the destination, please say stop following me.
+2019-06-23 15:20:42.265315	robot spoke:I am ready to start following you.
+2019-06-23 15:21:23.281462	robot heard:stop following me
+2019-06-23 15:21:23.290342	robot spoke:Should I stop following you?
+2019-06-23 15:21:29.003831	robot heard:yes
+2019-06-23 15:21:29.004436	robot spoke:OK, I will stop. Please give me next command.

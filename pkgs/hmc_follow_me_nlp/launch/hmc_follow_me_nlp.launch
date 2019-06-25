@@ -1,0 +1,5 @@
+<launch>
+  <node name="hmc_follow_me_nlp_main" pkg="hmc_follow_me_nlp" type="main.py" output="screen" />
+  <node name="hmc_follow_me_nlp_speak" pkg="hmc_follow_me_nlp" type="speak.py" output="screen" />
+  <node name="hmc_follow_me_nlp_recognition" pkg="hmc_follow_me_nlp" type="recognition.py" output="screen" />
+</launch>

@@ -1,0 +1,4 @@
+<launch>
+  <node name="help_me_nlp_first_half_help" pkg="help_me_nlp_first_half" type="help.py" output="screen"/>
+  <node name="help_me_nlp_first_half_recog" pkg="help_me_nlp_first_half" type="resume_sphinx.py" output="screen"/>
+</launch>
