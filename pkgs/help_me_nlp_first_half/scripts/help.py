@@ -20,7 +20,7 @@ activate = False
 def help():
 	def start_speech(data):
 		if (data.id == 1):
-			print "first_nlp"
+			print("first_nlp")
 			global start_flag, activate
 			start_flag = True
 			activate = True
@@ -71,7 +71,7 @@ def help():
 		# navigationに場所を伝える
 		rospy.wait_for_service('/sound_system/nlp', timeout=1)
 		response = rospy.ServiceProxy('/sound_system/nlp', NLPService)('Please go to {}'.format(place))
-		print response.response
+		print(response.response)
 		if "OK" in response.response:
 			navigation_wait = True
 			while navigation_wait:

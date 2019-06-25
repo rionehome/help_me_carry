@@ -9,9 +9,9 @@ from std_msgs.msg import Bool
 
 def callback_activate(data):
 	if data.id == 2:
-		print "human_detection_nlp"
+		print("human_detection_nlp")
 		time.sleep(3)
-		print "wait"
+		print("wait")
 		pub_start.publish(True)
 
 
