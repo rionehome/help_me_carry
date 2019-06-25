@@ -10,11 +10,16 @@ from std_msgs.msg import Bool
 class HmcHumanDetection:
 
     def __init__(self):
+
+        # HumanDetectionが全体から割り当てられたID
+        self.no = 2
+
         rospy.init_node("hmc_navigation_main", anonymous=True)
         self.pub_start = rospy.Publisher("/human_detection/start", Bool, queue_size=10)
         self.pub_next = rospy.Publisher('/help_me_carry/activate', Activate, queue_size=10)
         rospy.Subscriber("/help_me_carry/activate", Activate, self.callback_activate)
         rospy.Subscriber("/human_detection/finish", Bool, self.callback_finish)
+
         rospy.spin()
 
     def callback_activate(self, data):
@@ -22,10 +27,11 @@ class HmcHumanDetection:
         """
         ROS Subscriberコールバック関数
         Activateの通知を受け取り、IDが2の場合はHumanDetectionを起動
+
         :param data: Activate(int32, string)型のメッセージ
         :return: なし
         """
-        if data.id == 2:
+        if data.id == self.no:
             print("human_detection_nlp")
             time.sleep(3)
             print("wait")
@@ -37,11 +43,15 @@ class HmcHumanDetection:
         """
         ROS Subscriberコールバック関数
         HumanDetectionのノードから終了の合図を受信
+        次のIDのノードに起動メッセージを送る
+
         :param data: Bool型メッセージ
         :return: なし
         """
         activate = Activate()
-        activate.id = 3
+        # 次のIDを指定
+        activate.id = self.no + 1
+        # HumanDetectionが成功したかどうかも次のノードに送る
         if data.data:
             activate.text = "success"
         else:
