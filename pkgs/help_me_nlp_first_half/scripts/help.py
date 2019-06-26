@@ -39,10 +39,9 @@ class help:
             while (self.finish_speaking_flag != True):
                 continue
 
-
-    def yes_no_recognition(self, yes_or_no, target_place):
+    def yes_no_recognition(self, yes_or_no, target):  # yes or noを判断。場所を確認
         if (yes_or_no == 'yes'):
-            self.start_speaking('OK, I take this bag to {}'.format(target_place))
+            self.start_speaking('OK, I take this bag to {}'.format(target))
             while (self.finish_speaking_flag != True):
                 continue
             self.start_speaking('Sorry, I have no arm. So, I want you to put your bag on plate.')
@@ -50,7 +49,7 @@ class help:
                 continue
 
             # navigationに場所を伝え、移動終了まで処理をする
-            self.send_place_msg(target_place)
+            self.send_place_msg(target)
             self.start_flag = False
             self.txt = ''
         else:
@@ -73,17 +72,8 @@ class help:
             self.start_flag = True
             self.activate = True
 
-    def get_yesno(self, sentence):
-        global take_ans
-        if (sentence != ''):
-            take_ans = sentence.data
-            print(take_ans)
-
-        print('I\'m taking yes or no...')
-        time.sleep(1)
-        self.yes_no.publish(True)
-
     def get_txt(self, sentence):  # 音声認識の結果を取得
+        self.start_resume.publish(False)  # 音声認識を止める
         if (sentence != '' and self.target_place != ''):
             self.txt = sentence.data
             if self.txt == 'yes' or self.txt == 'no':
@@ -91,14 +81,12 @@ class help:
             else:
                 self.main(self.txt)
 
-        time.sleep(1)
-        self.start_resume.publish(False)  # 音声認識を止める
 
-    def finish_speaking(self, data):
+    def finish_speaking(self, data):  # 発話終了合図を受ける
         if (data.data == True):
             self.finish_speaking_flag = True
 
-    def navigation_goal_callback(self, data):
+    def navigation_goal_callback(self, data):  # は？　これはなに？
         if self.activate:
             # 次のノードに処理を渡す
             next = Activate()
@@ -110,14 +98,14 @@ class help:
     def __init__(self):
         rospy.init_node('help_me_nlp_first_half_help', anonymous=True)
         
-        self.start_resume = rospy.Publisher('txt_start', Bool, queue_size=10)
-        self.yes_no = rospy.Publisher('yes_no/recognition_start', Bool, queue_size=10)  # yes_no取得開始
+        self.start_resume = rospy.Publisher('/txt_start', Bool, queue_size=10)
+        
         self.speak = rospy.Publisher('help_me_nlp_second_half/speak_sentence', String, queue_size=10)  # 発話
         self.next_pub = rospy.Publisher('/help_me_carry/activate', Activate, queue_size=10)
 
         rospy.Subscriber('/help_me_carry/activate', Activate, self.start_speech)  # ノードを起動
-        rospy.Subscriber('yes_no/recognition_result', String, self.get_yesno)  # yes_no
-        rospy.Subscriber('recognition_txt', String, self.get_txt)  # 音声認識結果取得
+        
+        rospy.Subscriber('/recognition_txt', String, self.get_txt)  # 音声認識結果取得
         rospy.Subscriber('help_me_nlp_second_half/finish_speaking', Bool, self.finish_speaking)  # 発話終了
         rospy.Subscriber('/navigation/goal', Bool, self.navigation_goal_callback)
 
