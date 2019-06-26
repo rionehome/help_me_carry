@@ -53,10 +53,10 @@ class Recognition:
         self.dic_path = os.path.join(self.dictionary_path, 'yes_no_sphinx.dict')
         self.jsgf_path = os.path.join(self.dictionary_path, "yes_no_sphinx.gram")
         
-        rospy.Subscriber('help_me_nlp_second_half/recognition_start', Bool, self.control)
+        rospy.Subscriber('/help_me_nlp_second_half/recognition_start', Bool, self.control)
         # rospy.Subscriber('help_me_nlp_second_half/stop_recognition', String, self.control2)
 
-        self.pub = rospy.Publisher('help_me_nlp_second_half/recognition_result', String, queue_size=10)
+        self.pub = rospy.Publisher('/help_me_nlp_second_half/recognition_result', String, queue_size=10)
         
         self.speech = None
         self.speech_recognition = False
