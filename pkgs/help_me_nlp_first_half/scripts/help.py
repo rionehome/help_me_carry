@@ -71,6 +71,7 @@ class help:
             print("first_nlp")
             self.start_flag = True
             self.activate = True
+            self.start_resume.publish(True)
 
     def get_txt(self, sentence):  # 音声認識の結果を取得
         self.start_resume.publish(False)  # 音声認識を止める
