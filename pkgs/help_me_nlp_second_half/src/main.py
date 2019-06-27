@@ -98,11 +98,12 @@ class Help_me_nlp_second_half:
         rospy.init_node("help_me_nlp_second_half_main")
         rospy.Subscriber("/help_me_carry/activate", Activate, self.person_dictation_callback)  # 画像認識終了の合図 **画像**
         
-        rospy.Subscriber("/help_me_nlp_second_half/finish_speaking", Bool, self.control)  # 発話終了の合図
+        rospy.Subscriber('/hmc_follow_me_nlp/finish_speaking', Bool, self.control)  # 発話終了の合図
+        
         rospy.Subscriber("/help_me_nlp_second_half/recognition_result", String, self.recognition_callback)  # 音声認識結果
         rospy.Subscriber("/navigation/goal", Bool, self.reach_car_callback)  # 車に着いた合図 **制御**
 
-        self.pub_speak = rospy.Publisher("/help_me_nlp_second_half/speak_sentence", String, queue_size=10)  # 発話する文章
+        self.pub_speak = rospy.Publisher('/hmc_follow_me_nlp/speak_sentence', String, queue_size=10)  # 発話する文章
         self.pub_start = rospy.Publisher('/help_me_nlp_second_half/recognition_start', Bool, queue_size=10)
         
         self.pub_find_person = rospy.Publisher("/help_me_carry/activate", Activate, queue_size=10)  # 手伝ってくれる人がいたかどうかの合図 **画像**
