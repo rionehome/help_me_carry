@@ -45,9 +45,15 @@ class Recognition:
 
     def recognition(self):
         while 1:
-            if self.speech_recognition == True:
+            if self.speech_recognition == 'help':
+                self.dic_path = os.path.join(self.dictionary_path, 'take_sphinx.dict')
+                self.jsgf_path = (os.path.join(self.dictionary_path, "take_sphinx.gram"))
                 self.resume()
-            elif self.speech_recognition == False:
+            elif self.speech_recognition == 'yes_no':
+                self.dic_path = os.path.join(self.dictionary_path, 'yes_no_sphinx.dict')
+                self.jsgf_path = (os.path.join(self.dictionary_path, "yes_no_sphinx.gram"))
+                self.resume()
+            elif self.speech_recognition == 'stop':
                 self.pause()
 
 
@@ -63,13 +69,13 @@ class Recognition:
         self.model_path = get_model_path()  # 音響モデルのディレクトリの絶対パス
         self.dictionary_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dictionary')  # 辞書のディレクトリの絶対パス
         
-        rospy.Subscriber('/txt_start', Bool, self.control)
-        self.pub = rospy.Publisher('/recognition_txt', String, queue_size=10)
+        rospy.Subscriber('/help_me_nlp_first/resume_sphinx', String, self.control)
+        self.pub = rospy.Publisher('/help_me_nlp_first/recognition_txt', String, queue_size=10)
         
         self.speech_recognition = False  # ノードを立ち上げた時から音声認識が始まる # 最初は音声認識を停止する場合はFalse
         self.speech = None
-        self.dic_path = os.path.join(self.dictionary_path, 'take_sphinx.dict')
-        self.jsgf_path = (os.path.join(self.dictionary_path, "take_sphinx.gram"))
+        #self.dic_path = os.path.join(self.dictionary_path, 'take_sphinx.dict')
+        #self.jsgf_path = (os.path.join(self.dictionary_path, "take_sphinx.gram"))
         self.recognition()
 
 
