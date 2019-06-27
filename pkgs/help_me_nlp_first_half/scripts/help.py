@@ -100,20 +100,22 @@ class help:
     def __init__(self):
         rospy.init_node('help_me_nlp_first_half_help', anonymous=True)
         
-        self.start_resume = rospy.Publisher('/txt_start', Bool, queue_size=10)  # 音声認識開始
+        self.start_resume = rospy.Publisher('/help_me_nlp_first/resume_sphinx', Bool, queue_size=10)  # 音声認識開始
         
-        self.speak = rospy.Publisher('/help_me_nlp_second_half/speak_sentence', String, queue_size=10)  # 発話
+        self.speak = rospy.Publisher('/hmc_follow_me_nlp/speak_sentence', String, queue_size=10)  # 発話
+        
         self.next_pub = rospy.Publisher('/help_me_carry/activate', Activate, queue_size=10)  # 次のノードに渡す
-
         rospy.Subscriber('/help_me_carry/activate', Activate, self.start_speech)  # ノードを起動
         
-        rospy.Subscriber('/recognition_txt', String, self.get_txt)  # 音声認識結果取得
-        rospy.Subscriber('/help_me_nlp_second_half/finish_speaking', Bool, self.finish_speaking)  # 発話終了
+        rospy.Subscriber('/help_me_nlp_first/recognition_txt', String, self.get_txt)  # 音声認識結果取得
+        rospy.Subscriber('/hmc_follow_me_nlp/finish_speaking', Bool, self.finish_speaking)  # 発話終了
+        
         rospy.Subscriber('/navigation/goal', Bool, self.navigation_goal_callback)
 
         self.loop_count = 0
         self.model_path = get_model_path()
         self.dic_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dictionary')
+        
         self.navigation_wait = False
         self.activate = False
         self.start_flag = False
