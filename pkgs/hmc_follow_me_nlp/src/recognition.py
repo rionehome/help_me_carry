@@ -25,7 +25,7 @@ class Recognition:
             score = text.confidence()
             if score > 0.1:
                 text = str(text)
-                # self.speech_recognition = False
+                self.speech_recognition = False
                 self.pause()
                 self.pub.publish(text) # 音声認識の結果をpublish
                 break
