@@ -8,15 +8,10 @@ import os
 from pocketsphinx import LiveSpeech, get_model_path
 import subprocess
 
-beep_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'beep')
-PATH_beep_start = os.path.join(beep_path, 'start.wav')
-PATH_beep_stop = os.path.join(beep_path, 'stop.wav')
-
-
 class Recognition:
     # 音声認識
     def resume(self):
-        subprocess.call('aplay -q --quiet {}'.format(PATH_beep_start), shell=True)
+        subprocess.call('aplay -q --quiet {}'.format(self.PATH_beep_start), shell=True)
 
         print('== START RECOGNITION ==')
         self.speech = LiveSpeech(
@@ -31,8 +26,8 @@ class Recognition:
             score = text.confidence()
             if score > 0.1:
                 text = str(text)
+                # self.speech_recognition = False
                 self.pause()
-                self.speech_recognition = False
                 self.pub.publish(text)  # 音声認識の結果をpublish
                 break
             else:
@@ -68,14 +63,17 @@ class Recognition:
         rospy.init_node('help_me_nlp_half_recog', anonymous=True)
         self.model_path = get_model_path()  # 音響モデルのディレクトリの絶対パス
         self.dictionary_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dictionary')  # 辞書のディレクトリの絶対パス
+        self.beep_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'beep')
+        self.PATH_beep_start = os.path.join(self.beep_path, 'start.wav')
         
         rospy.Subscriber('/help_me_nlp_first/resume_sphinx', String, self.control)
+
         self.pub = rospy.Publisher('/help_me_nlp_first/recognition_txt', String, queue_size=10)
         
-        self.speech_recognition = False  # ノードを立ち上げた時から音声認識が始まる # 最初は音声認識を停止する場合はFalse
+        self.speech_recognition = False  # ノードを立ち上げた時から音声認識が始まる 最初は音声認識を停止する場合はFalse
         self.speech = None
-        #self.dic_path = os.path.join(self.dictionary_path, 'take_sphinx.dict')
-        #self.jsgf_path = (os.path.join(self.dictionary_path, "take_sphinx.gram"))
+
+        print('== STOP RECOGNITION ==')
         self.recognition()
 
 
