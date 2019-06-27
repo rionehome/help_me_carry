@@ -38,9 +38,11 @@ class help:
 
             while (self.finish_speaking_flag != True):
                 continue
+            self.start_resume.publish('yes_no')
 
     def yes_no_recognition(self, yes_or_no, target):  # yes or noを判断。場所を確認
-        if self.loop_count <=2:
+        print(self.loop_count)
+        if self.loop_count >=2:
             if (yes_or_no == 'yes'):
                 self.start_speaking('OK, I take this bag to {}'.format(target))
                 while (self.finish_speaking_flag != True):
@@ -56,11 +58,14 @@ class help:
             else:
                 # 場所情報をランダムに発話していく.
                 place_list = ['bed', 'kitchen', 'car', 'living room']
-                self.loop_count = self.loop_count + 1
-                self.target_place = place_list[self.loop_count%len(place_list)]
+                self.index = self.index + 1
+                self.target_place = place_list[self.index%len(place_list)]
 
                 self.start_speaking('Is it {} ?'.format(self.target_place))
-                self.start_resume.publish(True)
+                self.start_resume.publish('yes_no')
+        else:
+            self.start_resume.publish('help')
+            self.loop_count += 1
 
     def start_speaking(self, sentence):
         self.finish_speaking_flag = False
@@ -73,12 +78,13 @@ class help:
             print("first_nlp")
             self.start_flag = True
             self.activate = True
-            self.start_resume.publish(True)
+            self.start_resume.publish('help')
 
     def get_txt(self, sentence):  # 音声認識の結果を取得
-        self.start_resume.publish(False)  # 音声認識を止める
-        if (sentence != '' and self.target_place != ''):
+        self.start_resume.publish('stop')  # 音声認識を止める
+        if (sentence != ''):
             self.txt = sentence.data
+            print(self.txt)
             if self.txt == 'yes' or self.txt == 'no':
                 self.yes_no_recognition(self.txt, self.target_place)
             else:
@@ -100,7 +106,7 @@ class help:
     def __init__(self):
         rospy.init_node('help_me_nlp_first_half_help', anonymous=True)
         
-        self.start_resume = rospy.Publisher('/help_me_nlp_first/resume_sphinx', Bool, queue_size=10)  # 音声認識開始
+        self.start_resume = rospy.Publisher('/help_me_nlp_first/resume_sphinx', String, queue_size=10)  # 音声認識開始
         
         self.speak = rospy.Publisher('/hmc_follow_me_nlp/speak_sentence', String, queue_size=10)  # 発話
         
@@ -113,6 +119,7 @@ class help:
         rospy.Subscriber('/navigation/goal', Bool, self.navigation_goal_callback)
 
         self.loop_count = 0
+        self.index = 0
         self.model_path = get_model_path()
         self.dic_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dictionary')
         
