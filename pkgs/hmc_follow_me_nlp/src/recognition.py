@@ -25,7 +25,7 @@ class Recognition:
             score = text.confidence()
             if score > 0.1:
                 text = str(text)
-                self.speech_recognition = False
+                # self.speech_recognition = False
                 self.pause()
                 self.pub.publish(text) # 音声認識の結果をpublish
                 break
@@ -37,17 +37,24 @@ class Recognition:
         print('== STOP RECOGNITION ==')
         self.speech = LiveSpeech(no_search=True)
 
+    def recognition(self):
+        while 1:
+            if self.speech_recognition == True:
+                self.resume()
+            elif self.speech_recognition == False:
+                self.pause()
+
+    ##########################################
     # 音声認識再開のメッセージを受け取る
     def control(self, data):
         self.speech_recognition = data.data
-        if self.activate == True and self.speech_recognition == True:
-            self.resume()
-            stop_flag = False
 
     def control3(self, data):
         if data.id == 0:
             print "follow_me_nlp"
             self.activate = True
+
+    ##########################################
 
     def __init__(self):
         rospy.init_node('hmc_follow_me_nlp_recognition', anonymous=True)

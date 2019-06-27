@@ -36,16 +36,23 @@ class Recognition:
         print('== STOP RECOGNITION ==')
         self.speech = LiveSpeech(no_search=True)
 
+    def recognition(self):
+        while 1:
+            if self.speech_recognition == True:
+                self.resume()
+            elif self.speech_recognition == False:
+                self.pause()
+
+    ##########################################
     # 音声認識再開のメッセージを受け取る
     def control(self, data):
         self.speech_recognition = data.data
-        if self.speech_recognition == True:
-            self.resume()
-            stop_flag = False
     
     #def control2(self, data):
     #    self.speech_recognition = data.data
     
+    ##########################################
+
     def __init__(self):
         rospy.init_node('hlep_me_nlp_second_half_recognition', anonymous=True)
         self.model_path = '/usr/local/lib/python2.7/dist-packages/pocketsphinx/model' # 音響モデルのディレクトリの絶対パス
@@ -61,6 +68,7 @@ class Recognition:
         self.speech = None
         self.speech_recognition = False
         print('== STOP RECOGNITION ==')
+        self.recognition()
         rospy.spin()
 
 if __name__ == '__main__':
