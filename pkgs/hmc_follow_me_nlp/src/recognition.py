@@ -39,9 +39,9 @@ class Recognition:
 
     def recognition(self):
         while 1:
-            if self.speech_recognition == True:
+            if self.activate == True and self.speech_recognition == True:
                 self.resume()
-            elif self.speech_recognition == False:
+            elif self.activate == True and self.speech_recognition == False:
                 self.pause()
 
     ##########################################
@@ -53,6 +53,7 @@ class Recognition:
         if data.id == 0:
             print "follow_me_nlp"
             self.activate = True
+            self.speech_recognition = True
 
     ##########################################
 
@@ -73,6 +74,7 @@ class Recognition:
         self.speech_recognition = False
         self.activate = False
         print('== STOP RECOGNITION ==')
+        self.recognition()
         rospy.spin()
 
 if __name__ == '__main__':
