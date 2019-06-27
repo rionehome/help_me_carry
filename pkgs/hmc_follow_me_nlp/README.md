@@ -50,7 +50,7 @@ roslaunch hmc_follow_me_nlp hmc_follow_me_nlp.launch
 
 ```
 roslaunch hmc_follow_me_nlp hmc_follow_me_nlp_julius_english.launch
-````
+```
 
 
 ## Node
@@ -58,21 +58,20 @@ roslaunch hmc_follow_me_nlp hmc_follow_me_nlp_julius_english.launch
 
 ### Subscribe Topic
 
-* **`hmc_follow_me_nlp/recognition_result`** 音声認識結果の受け取り （ std_msgs/String ）
+* **`/hmc_follow_me_nlp/recognition_result`** 音声認識結果の受け取り （ std_msgs/String ）
 
-* **`hmc_follow_me_nlp/finish_speaking`** 発話が終了した合図の受け取り ( std_msgs/Bool )
+* **`/hmc_follow_me_nlp/finish_speaking`** 発話が終了した合図の受け取り ( std_msgs/Bool )
 
 ### Publish Topic
 
-* **`hmc_follow_me_nlp/follow_me`** 制御にFollow meの開始と終了の合図の文字列を渡す ( std_msgs/String )
+* **`/follow_me/control`** 制御にFollow meの開始と終了の合図の文字列を渡す ( std_msgs/String )
 
 	'start'：「Follow me」開始の合図
-
 	'stop'：「Follow me」終了の合図
 
-* **`hmc_follow_me_nlp/speak_sentence`** 発話する文字列 ( std_msgs/String )
+* **`/hmc_follow_me_nlp/speak_sentence`** 発話する文字列 ( std_msgs/String )
 
-* **`hmc_follow_me_nlp/recognition_start`** 音声認識再開 ( std_msgs/Bool )
+* **`/hmc_follow_me_nlp/recognition_start`** 音声認識再開 ( std_msgs/Bool )
 
 	True：音声認識　開始  
 	False:音声認識　停止
@@ -84,22 +83,26 @@ roslaunch hmc_follow_me_nlp hmc_follow_me_nlp_julius_english.launch
 
 ### Subscribe Topic
 
-* **`hmc_follow_me_nlp/recognition_start`** 音声認識再開の受け取り （ std_msgs/Bool ）
+* **`/help_me_carry/activate`** 認識ノード起動 （ hmc_start_node/Activate ）
+
+* **`/hmc_follow_me_nlp/recognition_start`** 音声認識再開の受け取り （ std_msgs/Bool ）
 
 	True：音声認識　開始  
 	False:音声認識　停止
 
+* **`/hmc_follow_me_nlp/stop_recognition`** 音声認識ストップ （ std_msgs/String ）
+
 ### Publish Topic
 
-* **`hmc_follow_me_nlp/recognition_result`** 音声認識結果 ( std_msgs/String )
+* **`/hmc_follow_me_nlp/recognition_result`** 音声認識結果 ( std_msgs/String )
 
 ## Node
 **`name` hmc_follow_me_nlp_speak**
 
 ### Subscribe Topic
 
-* **`hmc_follow_me_nlp/speak_sentence`** 発話する文字列の受け取り （ std_msgs/String ）
+* **`/hmc_follow_me_nlp/speak_sentence`** 発話する文字列の受け取り （ std_msgs/String ）
 
 ### Publish Topic
 
-* **`hmc_follow_me_nlp/finish_speaking`** 発話が終了した合図 ( std_msgs/Bool )
+* **`/hmc_follow_me_nlp/finish_speaking`** 発話が終了した合図 ( std_msgs/Bool )
