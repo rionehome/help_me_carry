@@ -64,6 +64,7 @@ class help:
                 self.start_speaking('Is it {} ?'.format(self.target_place))
                 self.start_resume.publish('yes_no')
         else:
+            self.start_speaking('Sorry, please say again')
             self.start_resume.publish('help')
             self.loop_count += 1
 
