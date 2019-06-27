@@ -71,22 +71,6 @@ class Follow_me_nlp:
             elif judge == "s":
                 f.write(str(datetime.datetime.now()) + "\t" + "robot spoke:" + sentence + "\n")
 
-    # 認識結果の文字列の処理
-    def callback(self, data):
-        request = data.data
-        # 認識した文字列が何か決定する
-        request_list = ['follow me', 'stop following me', 'here is the car', 'yes', 'no']
-        max = 0
-        answer = ''
-        for q in request_list:
-            level = self.get_similar(request, q)
-            if level > max:
-                max = level
-                answer = q
-        self.log_file(answer, "h")
-        rospy.loginfo("robot heard: %s", answer)
-        self.judge(answer)
-
     # 条件分岐の処理
     def judge(self, answer):
         # Follow me
@@ -132,7 +116,7 @@ class Follow_me_nlp:
                 self.pub_nlp_first.publish(next)
                 self.pub_stop_recognition.publish('stop node')
                 os.system('rosnode kill hmc_follow_me_nlp_recognition')
-                os.system('rosnode kill hmc_follow_me_nlp_speak')
+
                 os.system('rosnode kill hmc_follow_me_nlp_main')
             # 'No'の時の処理
             elif (answer == 'no') and (self.stop_flag == 'True'):
@@ -143,16 +127,34 @@ class Follow_me_nlp:
                 self.speak('Sorry. I could not understand the command. Please say the command again.')
                 self.pub_start.publish(True)
 
-    # 発話が終了したメッセージを受け取る
-    def control(self, data):
-        self.speak_flag = data.data
-
     # 発話が終了するまで待つ
     def wait(self):
         self.speak_flag = False
         while self.speak_flag != True:
             pass
 
+    #############################################################
+    # 認識結果の文字列の処理
+    def callback(self, data):
+        request = data.data
+        # 認識した文字列が何か決定する
+        request_list = ['follow me', 'stop following me', 'here is the car', 'yes', 'no']
+        max = 0
+        answer = ''
+        for q in request_list:
+            level = self.get_similar(request, q)
+            if level > max:
+                max = level
+                answer = q
+        self.log_file(answer, "h")
+        rospy.loginfo("robot heard: %s", answer)
+        self.judge(answer)
+
+    # 発話が終了したメッセージを受け取る
+    def control(self, data):
+        self.speak_flag = data.data
+
+    ##################################################################
     def __init__(self):
         rospy.init_node('hmc_follow_me_nlp_main', anonymous=True)
         rospy.Subscriber('/hmc_follow_me_nlp/recognition_result', String, self.callback)
