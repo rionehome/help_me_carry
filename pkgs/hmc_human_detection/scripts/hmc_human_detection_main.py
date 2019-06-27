@@ -56,7 +56,7 @@ class HmcHumanDetection:
             activate.text = "success"
         else:
             activate.text = "failed"
-        self.pub_activate.publish(activate)
+        self.pub_next.publish(activate)
 
 
 if __name__ == '__main__':
