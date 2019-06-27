@@ -26,7 +26,6 @@ class Recognition:
             score = text.confidence()
             if score > 0.1:
                 text = str(text)
-                # self.speech_recognition = False
                 self.pause()
                 self.pub.publish(text)  # 音声認識の結果をpublish
                 break
@@ -35,7 +34,9 @@ class Recognition:
 
     # 音声認識ストップ
     def pause(self):
-        print('== STOP RECOGNITION ==')
+        if self.state == True:
+            self.state = False
+            print('== STOP RECOGNITION ==')
         self.speech = LiveSpeech(no_search=True)
 
     def recognition(self):
@@ -43,10 +44,12 @@ class Recognition:
             if self.speech_recognition == 'help':
                 self.dic_path = os.path.join(self.dictionary_path, 'take_sphinx.dict')
                 self.jsgf_path = (os.path.join(self.dictionary_path, "take_sphinx.gram"))
+                self.state = True
                 self.resume()
             elif self.speech_recognition == 'yes_no':
                 self.dic_path = os.path.join(self.dictionary_path, 'yes_no_sphinx.dict')
                 self.jsgf_path = (os.path.join(self.dictionary_path, "yes_no_sphinx.gram"))
+                self.state = True
                 self.resume()
             elif self.speech_recognition == 'stop':
                 self.pause()
@@ -72,6 +75,7 @@ class Recognition:
         
         self.speech_recognition = False  # ノードを立ち上げた時から音声認識が始まる 最初は音声認識を停止する場合はFalse
         self.speech = None
+        self.state = False
 
         print('== STOP RECOGNITION ==')
         self.recognition()
