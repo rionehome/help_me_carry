@@ -42,20 +42,20 @@ class help:
 
     def yes_no_recognition(self, yes_or_no, target):  # yes or noを判断。場所を確認
         print(self.loop_count)
-        if self.loop_count >=2:
-            if (yes_or_no == 'yes'):
-                self.start_speaking('OK, I take this bag to {}'.format(target))
-                while (self.finish_speaking_flag != True):
-                    continue
-                self.start_speaking('Sorry, I have no arm. So, I want you to put your bag on plate.')
-                while (self.finish_speaking_flag != True):
-                    continue
+        if (yes_or_no == 'yes'):
+            self.start_speaking('OK, I take this bag to {}'.format(target))
+            while (self.finish_speaking_flag != True):
+                continue
+            self.start_speaking('Sorry, I have no arm. So, I want you to put your bag on plate.')
+            while (self.finish_speaking_flag != True):
+                continue
 
-                # navigationに場所を伝え、移動終了まで処理をする
-                self.send_place_msg(target)
-                self.start_flag = False
-                self.txt = ''
-            else:
+            # navigationに場所を伝え、移動終了まで処理をする
+            self.send_place_msg(target)
+            self.start_flag = False
+            self.txt = ''
+        else:
+            if self.loop_count >=2:
                 # 場所情報をランダムに発話していく.
                 place_list = ['bed', 'kitchen', 'car', 'living room']
                 self.index = self.index + 1
@@ -63,10 +63,10 @@ class help:
 
                 self.start_speaking('Is it {} ?'.format(self.target_place))
                 self.start_resume.publish('yes_no')
-        else:
-            self.start_speaking('Sorry, please say again')
-            self.start_resume.publish('help')
-            self.loop_count += 1
+            else:
+                self.start_speaking('Sorry, please say again')
+                self.start_resume.publish('help')
+                self.loop_count += 1
 
     def start_speaking(self, sentence):
         self.finish_speaking_flag = False
