@@ -40,6 +40,8 @@ class help:
             while (self.finish_speaking_flag != True):
                 continue
             #self.start_resume.publish('yes_no')
+            self.chenge_dict.publish("yes_no_sphinx.dict")
+            self.chenge_gram.publish("yes_no_sphinx.gram")
             self.start_resume.publish(True)
 
     def yes_no_recognition(self, yes_or_no, target):  # yes or noを判断。場所を確認
@@ -65,6 +67,8 @@ class help:
 
                 self.start_speaking('Is it {} ?'.format(self.target_place))
                 #self.start_resume.publish('yes_no')
+                self.chenge_dict.publish("yes_no_sphinx.dict")
+                self.chenge_gram.publish("yes_no_sphinx.gram")
                 self.start_resume.publish(True)
             else:
                 self.start_speaking('Sorry, please say again')
@@ -83,6 +87,8 @@ class help:
             print("first_nlp")
             self.start_flag = True
             self.activate = True
+            self.chenge_dict.publish("take_sphinx.dict")
+            self.chenge_gram.publish("take_sphinx.gram")
             #self.start_resume.publish('help')
             self.start_resume.publish(True)
 
@@ -118,6 +124,10 @@ class help:
         self.speak = rospy.Publisher('/hmc_follow_me_nlp/speak_sentence', String, queue_size=10)  # 発話
         
         self.next_pub = rospy.Publisher('/help_me_carry/activate', Activate, queue_size=10)  # 次のノードに渡す
+
+        self.chenge_dict = rospy.Publisher('/sound_system/sphinx/dict', String, queue_size=10)
+        self.chenge_gram = rospy.Publisher('/sound_system/sphinx/gram', String, queue_size=10)
+
         rospy.Subscriber('/help_me_carry/activate', Activate, self.start_speech)  # ノードを起動
         
         rospy.Subscriber('/sound_system/recognition_result', String, self.get_txt)  # 音声認識結果取得
