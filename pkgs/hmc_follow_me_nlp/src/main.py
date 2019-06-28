@@ -114,7 +114,7 @@ class Follow_me_nlp:
                 next = Activate()
                 next.id = 1
                 self.pub_nlp_first.publish(next)
-                self.pub_stop_recognition.publish('stop node')
+                self.pub_start.publish(False)
                 os.system('rosnode kill hmc_follow_me_nlp_recognition')
 
                 os.system('rosnode kill hmc_follow_me_nlp_main')
@@ -162,8 +162,10 @@ class Follow_me_nlp:
         
         self.pub = rospy.Publisher('/follow_me/control', String, queue_size=10) # **制御にFollow me 開始停止の合図**
         self.pub_speak = rospy.Publisher('/hmc_follow_me_nlp/speak_sentence', String, queue_size=10)
-        self.pub_start = rospy.Publisher('/hmc_follow_me_nlp/recognition_start', Bool, queue_size=10)
+        
+        self.pub_start = rospy.Publisher('/sound_system/recognition_start', Bool, queue_size=10)  # 音声認識開始
         self.pub_nlp_first = rospy.Publisher('/help_me_carry/activate', Activate, queue_size=10)
+        
         self.pub_stop_recognition = rospy.Publisher("/hmc_follow_me_nlp/stop_recognition", String, queue_size=10) # 音声認識のループを抜ける
         
         self.follow_me_flag = 'False'
