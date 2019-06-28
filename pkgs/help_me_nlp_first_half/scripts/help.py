@@ -38,7 +38,8 @@ class help:
 
             while (self.finish_speaking_flag != True):
                 continue
-            self.start_resume.publish('yes_no')
+            #self.start_resume.publish('yes_no')
+            self.start_resume.publish(True)
 
     def yes_no_recognition(self, yes_or_no, target):  # yes or noを判断。場所を確認
         print(self.loop_count)
@@ -62,10 +63,12 @@ class help:
                 self.target_place = place_list[self.index%len(place_list)]
 
                 self.start_speaking('Is it {} ?'.format(self.target_place))
-                self.start_resume.publish('yes_no')
+                #self.start_resume.publish('yes_no')
+                self.start_resume.publish(True)
             else:
                 self.start_speaking('Sorry, please say again')
-                self.start_resume.publish('help')
+                #self.start_resume.publish('help')
+                self.start_resume.publish(True)
                 self.loop_count += 1
 
     def start_speaking(self, sentence):
@@ -79,10 +82,12 @@ class help:
             print("first_nlp")
             self.start_flag = True
             self.activate = True
-            self.start_resume.publish('help')
+            #self.start_resume.publish('help')
+            self.start_resume.publish(True)
 
     def get_txt(self, sentence):  # 音声認識の結果を取得
-        self.start_resume.publish('stop')  # 音声認識を止める
+        # self.start_resume.publish('stop')  # 音声認識を止める
+        self.start_resume.publish(False)
         if (sentence != ''):
             self.txt = sentence.data
             print(self.txt)
@@ -107,14 +112,14 @@ class help:
     def __init__(self):
         rospy.init_node('help_me_nlp_first_half_help', anonymous=True)
         
-        self.start_resume = rospy.Publisher('/help_me_nlp_first/resume_sphinx', String, queue_size=10)  # 音声認識開始
+        self.start_resume = rospy.Publisher('/sound_system/recognition_start', Bool, queue_size=10)  # 音声認識開始
         
         self.speak = rospy.Publisher('/hmc_follow_me_nlp/speak_sentence', String, queue_size=10)  # 発話
         
         self.next_pub = rospy.Publisher('/help_me_carry/activate', Activate, queue_size=10)  # 次のノードに渡す
         rospy.Subscriber('/help_me_carry/activate', Activate, self.start_speech)  # ノードを起動
         
-        rospy.Subscriber('/help_me_nlp_first/recognition_txt', String, self.get_txt)  # 音声認識結果取得
+        rospy.Subscriber('/sound_system/recognition_result', String, self.get_txt)  # 音声認識結果取得
         rospy.Subscriber('/hmc_follow_me_nlp/finish_speaking', Bool, self.finish_speaking)  # 発話終了
         
         rospy.Subscriber('/navigation/goal', Bool, self.navigation_goal_callback)
