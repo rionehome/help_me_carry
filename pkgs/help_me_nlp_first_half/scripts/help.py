@@ -23,6 +23,7 @@ class help:
                 time.sleep(0.1)
         else:  # 動けないなどのメッセージが返ってくる（ほぼない）
             # 次のノードに処理を渡す
+            self.activate = False
             next = Activate()
             next.id = 2
             self.next_pub.publish(next)
@@ -88,7 +89,7 @@ class help:
     def get_txt(self, sentence):  # 音声認識の結果を取得
         # self.start_resume.publish('stop')  # 音声認識を止める
         self.start_resume.publish(False)
-        if (sentence != ''):
+        if (self.activate == True and sentence != ''):
             self.txt = sentence.data
             print(self.txt)
             if self.txt == 'yes' or self.txt == 'no':

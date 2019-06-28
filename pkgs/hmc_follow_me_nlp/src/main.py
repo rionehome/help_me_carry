@@ -110,6 +110,8 @@ class Follow_me_nlp:
                 self.follow_me_flag = 'False'
                 self.pub.publish('stop') # 制御に'stop'をpublish (***follow me が終わる***)
                 self.speak('OK, I will stop. Please give me next command.')
+                
+                self.activate = False
                 print('== Stop follow me...... ==')
                 next = Activate()
                 next.id = 1
@@ -136,19 +138,20 @@ class Follow_me_nlp:
     #############################################################
     # 認識結果の文字列の処理
     def callback(self, data):
-        request = data.data
-        # 認識した文字列が何か決定する
-        request_list = ['follow me', 'stop following me', 'here is the car', 'yes', 'no']
-        max = 0
-        answer = ''
-        for q in request_list:
-            level = self.get_similar(request, q)
-            if level > max:
-                max = level
-                answer = q
-        self.log_file(answer, "h")
-        rospy.loginfo("robot heard: %s", answer)
-        self.judge(answer)
+        if self.activate == True:
+            request = data.data
+            # 認識した文字列が何か決定する
+            request_list = ['follow me', 'stop following me', 'here is the car', 'yes', 'no']
+            max = 0
+            answer = ''
+            for q in request_list:
+                level = self.get_similar(request, q)
+                if level > max:
+                    max = level
+                    answer = q
+            self.log_file(answer, "h")
+            rospy.loginfo("robot heard: %s", answer)
+            self.judge(answer)
 
     # 発話が終了したメッセージを受け取る
     def control(self, data):
@@ -157,7 +160,7 @@ class Follow_me_nlp:
     def control3(self, data):
         if data.id == 0:
             print "follow_me_nlp"
-            #self.activate = True
+            self.activate = True
             #self.speech_recognition = True
             self.pub_start.publish(True)
 
@@ -179,6 +182,7 @@ class Follow_me_nlp:
         self.follow_me_flag = 'False'
         self.stop_flag = 'False'
         self.speak_flag = False
+        self.activate = False
         self.log_file_name = "{}/log{}.txt".format(os.path.join(os.path.dirname(os.path.abspath(__file__)), "log"), datetime.datetime.now())
 
 
