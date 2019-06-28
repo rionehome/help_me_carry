@@ -1,4 +1,3 @@
 <launch>
-  <include file="$(find sound_system)/launch/sphinx.launch"/>
   <node name="help_me_nlp_first_half_help" pkg="help_me_nlp_first_half" type="help.py" output="screen"/>
 </launch>
