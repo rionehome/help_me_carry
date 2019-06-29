@@ -98,10 +98,13 @@ class help:
         if (self.activate == True and sentence != ''):
             self.txt = sentence.data
             print(self.txt)
-            if self.txt == 'yes' or self.txt == 'no':
-                self.yes_no_recognition(self.txt, self.target_place)
+            if self.txt == 'yes' or self.txt == 'no' or "take" in self.txt:
+                if self.txt == 'yes' or self.txt == 'no':
+                    self.yes_no_recognition(self.txt, self.target_place)
+                else:
+                    self.main(self.txt)
             else:
-                self.main(self.txt)
+                self.start_resume.publish(True)
 
     def finish_speaking(self, data):  # 発話終了合図を受ける
         if (data.data == True):

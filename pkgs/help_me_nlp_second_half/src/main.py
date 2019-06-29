@@ -59,21 +59,24 @@ class Help_me_nlp_second_half:
     def recognition_callback(self, data):
         if self.node_activate == True:
             answer = data.data
-            self.log_file(answer, "h")
-            rospy.loginfo("robot heard: %s", answer)
+            if answer == "yes" or answer == "no":
+                self.log_file(answer, "h")
+                rospy.loginfo("robot heard: %s", answer)
 
-            # "yes"のとき
-            if answer == 'yes':
-                self.speak("Thank you. I will guide you to the car. Please follow me.")
-                # self.pub_stop_recognition.publish("stop node")
-                # 場所の送信 & 移動
-                self.send_place_msg("car")
-            # "yes以外"
+                # "yes"のとき
+                if answer == 'yes':
+                    self.speak("Thank you. I will guide you to the car. Please follow me.")
+                    # self.pub_stop_recognition.publish("stop node")
+                    # 場所の送信 & 移動
+                    self.send_place_msg("car")
+                # "yes以外"
+                else:
+                    self.speak("OK. Thank you.")
+                    back = Activate()
+                    back.id = 2
+                    self.pub_find_person.publish(back)  # 人に手伝ってもらえることに失敗
             else:
-                self.speak("OK. Thank you.")
-                back = Activate()
-                back.id = 2
-                self.pub_find_person.publish(back)  # 人に手伝ってもらえることに失敗
+                self.pub_start.publish(True)
 
     def reach_car_callback(self, message):
         if not self.node_activate:

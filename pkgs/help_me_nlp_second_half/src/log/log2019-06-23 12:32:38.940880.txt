@@ -1,1 +1,0 @@
-2019-06-23 12:34:43.970268	robot spoke:Sorry, I could not  move to the car.

@@ -141,16 +141,19 @@ class Follow_me_nlp:
             request = data.data
             # 認識した文字列が何か決定する
             request_list = ['follow me', 'stop following me', 'here is the car', 'yes', 'no']
-            max = 0
-            answer = ''
-            for q in request_list:
-                level = self.get_similar(request, q)
-                if level > max:
-                    max = level
-                    answer = q
-            self.log_file(answer, "h")
-            rospy.loginfo("robot heard: %s", answer)
-            self.judge(answer)
+            if request in request_list:
+                max = 0
+                answer = ''
+                for q in request_list:
+                    level = self.get_similar(request, q)
+                    if level > max:
+                        max = level
+                        answer = q
+                self.log_file(answer, "h")
+                rospy.loginfo("robot heard: %s", answer)
+                self.judge(answer)
+            else:
+                self.pub_start.publish(True)
 
     # 発話が終了したメッセージを受け取る
     def control(self, data):
