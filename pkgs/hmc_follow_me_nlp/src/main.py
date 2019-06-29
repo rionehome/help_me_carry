@@ -95,7 +95,7 @@ class Follow_me_nlp:
                 self.pub_start.publish(True)
             
             else:
-                self.speak('Sorry. I could not understand the command. Please say the command again.')
+                #self.speak('Sorry. I could not understand the command. Please say the command again.')
                 self.pub_start.publish(True)
 
         # Stop follow me
@@ -124,7 +124,7 @@ class Follow_me_nlp:
                 self.speak('OK. Please say the command again.')
                 self.pub_start.publish(True)
             else:
-                self.speak('Sorry. I could not understand the command. Please say the command again.')
+                #self.speak('Sorry. I could not understand the command. Please say the command again.')
                 self.pub_start.publish(True)
 
     # 発話が終了するまで待つ
