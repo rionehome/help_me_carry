@@ -3,7 +3,7 @@
 # Follow me, 自然言語処理
 
 import rospy
-from sound_system.srv import NLPService
+from sound_system.srv import NLPService, HotwordService
 from std_msgs.msg import String, Bool
 from hmc_start_node.msg import Activate
 import datetime
@@ -13,6 +13,16 @@ import treetaggerwrapper as ttw
 
 
 class FollowMeNlp:
+    @staticmethod
+    def hot_word():
+        """
+        「hey, ducker」に反応
+        :return:
+        """
+        rospy.wait_for_service("/hotword/detect", timeout=1)
+        print "hot_word待機"
+        rospy.ServiceProxy("/hotword/detect", HotwordService)()
+    
     # 類似度を計算
     @staticmethod
     def get_similar(a, b):
@@ -166,6 +176,7 @@ class FollowMeNlp:
     def control3(self, data):
         if data.id == 0:
             print "follow_me_nlp"
+            self.hot_word()
             self.activate = True
             # self.speech_recognition = True
             self.pub_start.publish(True)
