@@ -3,6 +3,7 @@
 # Follow me, 自然言語処理
 
 import rospy
+from sound_system.srv import NLPService
 from std_msgs.msg import String, Bool
 from hmc_start_node.msg import Activate
 import datetime
@@ -113,6 +114,11 @@ class FollowMeNlp:
                 
                 self.activate = False
                 print('== Stop follow me...... ==')
+                
+                # locationに車の位置を記録
+                rospy.wait_for_service('/sound_system/nlp', timeout=1)
+                print rospy.ServiceProxy('/sound_system/nlp', NLPService)('Here is car')
+                
                 self.pub_nlp_first.publish(Activate(id=1))
                 
                 os.system('rosnode kill hmc_follow_me_nlp_main')
