@@ -45,19 +45,35 @@ class help:
             self.start_resume.publish(True)
 
     def yes_no_recognition(self, yes_or_no, target):  # yes or noを判断。場所を確認
-        print(self.loop_count)
-        if (yes_or_no == 'yes'):
+        if self.put_flag == True:
+            if yes_or_no == 'yes':
+                self.start_speaking('OK, I take this bag to {}'.format(target))
+                while (self.finish_speaking_flag != True):
+                    continue
+                self.send_place_msg(target)
+                self.start_flag = False
+                self.put_flag == False
+                self.txt = ''
+            else:
+                time.sleep(5)
+                self.start_speaking('Did you put your bag?')
+                while (self.finish_speaking_flag != True):
+                    continue
+                self.start_resume.publish(True)
+                return 
+        if yes_or_no == 'yes':
             self.start_speaking('OK, I take this bag to {}'.format(target))
             while (self.finish_speaking_flag != True):
                 continue
             self.start_speaking('Sorry, I have no arm. So, I want you to put your bag on plate.')
             while (self.finish_speaking_flag != True):
                 continue
-
-            # navigationに場所を伝え、移動終了まで処理をする
-            self.send_place_msg(target)
-            self.start_flag = False
-            self.txt = ''
+            self.put_flag=True
+            time.sleep(5)
+            self.start_speaking('Did you put your bag?')
+            while (self.finish_speaking_flag != True):
+                continue
+            self.start_resume.publish(True)#録音
         else:
             if self.loop_count >=2:
                 # 場所情報をランダムに発話していく.
@@ -106,6 +122,8 @@ class help:
             else:
                 self.start_resume.publish(True)
 
+                    
+
     def finish_speaking(self, data):  # 発話終了合図を受ける
         if (data.data == True):
             self.finish_speaking_flag = True
@@ -147,6 +165,7 @@ class help:
         self.activate = False
         self.start_flag = False
         self.finish_speaking_flag = False
+        self.put_flag=False
         self.txt = ''
         self.target_place = ''
 
