@@ -116,7 +116,6 @@ class Follow_me_nlp:
                 next = Activate()
                 next.id = 1
                 self.pub_nlp_first.publish(next)
-                self.pub_start.publish(False)
 
                 os.system('rosnode kill hmc_follow_me_nlp_main')
             # 'No'の時の処理
@@ -138,6 +137,7 @@ class Follow_me_nlp:
     # 認識結果の文字列の処理
     def callback(self, data):
         if self.activate == True:
+            self.pub_start.publish(False)
             request = data.data
             # 認識した文字列が何か決定する
             request_list = ['follow me', 'stop following me', 'here is the car', 'yes', 'no']
