@@ -109,11 +109,11 @@ class help:
 
     def navigation_goal_callback(self, data):
         if self.activate:
+            self.activate = False
             # 次のノードに処理を渡す
             next = Activate()
             next.id = 2
             self.next_pub.publish(next)
-            self.activate = False
 
     ########################################################################################
     def __init__(self):

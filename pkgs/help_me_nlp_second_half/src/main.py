@@ -25,7 +25,7 @@ class Help_me_nlp_second_half:
                 time.sleep(0.1)
         else:
             self.speak("Sorry, I could not  move to the car.")
-            os.system('rosnode kill help_me_nlp_second_half_recognition')
+            #os.system('rosnode kill help_me_nlp_second_half_recognition')
             os.system('rosnode kill help_me_nlp_second_half_speak')
             os.system('rosnode kill help_me_nlp_second_half_main')
 
@@ -100,11 +100,11 @@ class Help_me_nlp_second_half:
         
         rospy.Subscriber('/hmc_follow_me_nlp/finish_speaking', Bool, self.control)  # 発話終了の合図
         
-        rospy.Subscriber("/help_me_nlp_second_half/recognition_result", String, self.recognition_callback)  # 音声認識結果
+        rospy.Subscriber("/sound_system/recognition_result", String, self.recognition_callback)  # 音声認識結果
         rospy.Subscriber("/navigation/goal", Bool, self.reach_car_callback)  # 車に着いた合図 **制御**
 
         self.pub_speak = rospy.Publisher('/hmc_follow_me_nlp/speak_sentence', String, queue_size=10)  # 発話する文章
-        self.pub_start = rospy.Publisher('/help_me_nlp_second_half/recognition_start', Bool, queue_size=10)
+        self.pub_start = rospy.Publisher('/sound_system/recognition_start', Bool, queue_size=10)
         
         self.pub_find_person = rospy.Publisher("/help_me_carry/activate", Activate, queue_size=10)  # 手伝ってくれる人がいたかどうかの合図 **画像**
         #self.pub_stop_recognition = rospy.Publisher("/help_me_nlp_second_half/stop_recognition", String, queue_size=10)  # 音声認識のループを抜ける
