@@ -57,22 +57,23 @@ class Help_me_nlp_second_half:
 
     # Yes Noの音声認識結果を受け取る (目的地近くでオペレーターを見つけたとき)
     def recognition_callback(self, data):
-        answer = data.data
-        self.log_file(answer, "h")
-        rospy.loginfo("robot heard: %s", answer)
+        if self.node_activate == True:
+            answer = data.data
+            self.log_file(answer, "h")
+            rospy.loginfo("robot heard: %s", answer)
 
-        # "yes"のとき
-        if answer == 'yes':
-            self.speak("Thank you. I will guide you to the car. Please follow me.")
-            # self.pub_stop_recognition.publish("stop node")
-            # 場所の送信 & 移動
-            self.send_place_msg("car")
-        # "yes以外"
-        else:
-            self.speak("OK. Thank you.")
-            back = Activate()
-            back.id = 2
-            self.pub_find_person.publish(back)  # 人に手伝ってもらえることに失敗
+            # "yes"のとき
+            if answer == 'yes':
+                self.speak("Thank you. I will guide you to the car. Please follow me.")
+                # self.pub_stop_recognition.publish("stop node")
+                # 場所の送信 & 移動
+                self.send_place_msg("car")
+            # "yes以外"
+            else:
+                self.speak("OK. Thank you.")
+                back = Activate()
+                back.id = 2
+                self.pub_find_person.publish(back)  # 人に手伝ってもらえることに失敗
 
     def reach_car_callback(self, message):
         if not self.node_activate:
