@@ -38,12 +38,12 @@ class Follow_me_nlp:
         ########################################
         length_d = 0.0
         for d in dic:
-            length_d += dic[d]
+            length_d += dic[d] * dic[d]
         length_d = math.sqrt(length_d)
 
         length_d2 = 0.0
         for d2 in dic2:
-            length_d2 += dic2[d2]
+            length_d2 += dic2[d2] * dic2[d2]
         length_d2 = math.sqrt(length_d2)
 
         ########################################
