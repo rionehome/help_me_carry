@@ -17,7 +17,7 @@
 	<node pkg="follow_me" name="Follow" respawn="true" output="screen" type="Follow"/>
 
 	<node pkg="location" name="location" type="location_manager.py" output="screen">
-  		<param name="info_file" value="test.txt"/>
+  		<param name="info_file" value="crecore.txt"/>
   	</node>
 
 	<include file="$(find sound_system)/launch/sphinx.launch"/>
