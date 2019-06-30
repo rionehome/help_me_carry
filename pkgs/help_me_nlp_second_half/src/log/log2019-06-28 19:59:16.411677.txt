@@ -1,0 +1,4 @@
+2019-06-28 19:59:50.490535	robot spoke:Would you help carrying groceries into the house? Please answer yes or no.
+2019-06-28 19:59:57.812630	robot heard:yes
+2019-06-28 19:59:57.813101	robot spoke:Thank you. I will guide you to the car. Please follow me.
+2019-06-28 20:00:48.858843	robot spoke:Sorry, I could not  move to the car.
