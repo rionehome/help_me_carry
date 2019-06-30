@@ -47,15 +47,15 @@ class FollowMeNlp:
                 dic[tag[2]] += 1
         
         ########################################
-        length_d = 0.0
-        for d in dic:
-            length_d += dic[d] * dic[d]
-        length_d = math.sqrt(length_d)
-        
         length_d2 = 0.0
         for d2 in dic2:
             length_d2 += dic2[d2] * dic2[d2]
         length_d2 = math.sqrt(length_d2)
+
+        length_d = 0.0
+        for d in dic:
+            length_d += dic[d] * dic[d]
+        length_d = math.sqrt(length_d)
         
         ########################################
         score = 0.0
@@ -86,7 +86,7 @@ class FollowMeNlp:
     def judge(self, answer):
         # Follow me
         if self.follow_me_flag != 'Finish':
-            if answer == 'follow me':
+            if answer == 'follow me' and self.follow_me_flag == "False":
                 self.follow_me_flag = 'True'
                 self.speak('Should I start following you?')
                 self.pub_start.publish(True)
@@ -111,7 +111,7 @@ class FollowMeNlp:
         
         # Stop follow me
         elif (self.follow_me_flag == 'Finish') and (self.stop_flag != 'Finish'):
-            if (answer == 'stop following me') or (answer == 'here is the car'):
+            if ((answer == 'stop following me') or (answer == 'here is the car')) and (self.stop_flag == False):
                 self.stop_flag = 'True'
                 self.speak('Should I stop following you?')
                 self.pub_start.publish(True)
