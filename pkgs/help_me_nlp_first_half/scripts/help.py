@@ -51,6 +51,7 @@ class Help:
                 self.start_flag = False
                 self.put_flag = False
                 self.txt = ''
+                return
             else:
                 time.sleep(5)
                 self.start_speaking('Did you put your bag?')
