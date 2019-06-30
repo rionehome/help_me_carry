@@ -32,7 +32,7 @@ class Help:
             word_list = get_word.main(sentense.decode('utf-8'))
             print('place:{}'.format(word_list[0]))
             self.target_place = word_list[0]
-            self.start_speaking('I will take this bag to {} OK?'.format(self.target_place))
+            self.start_speaking('I will take this bag to {}? Please answer with yes or no'.format(self.target_place))
             
             while not self.finish_speaking_flag:
                 continue
