@@ -111,7 +111,7 @@ class FollowMeNlp:
         
         # Stop follow me
         elif (self.follow_me_flag == 'Finish') and (self.stop_flag != 'Finish'):
-            if ((answer == 'stop following me') or (answer == 'here is the car')) and (self.stop_flag == False):
+            if ((answer == 'stop following me') or (answer == 'here is the car')) and (self.stop_flag == 'False'):
                 self.stop_flag = 'True'
                 self.speak('Should I stop following you?')
                 self.pub_start.publish(True)
