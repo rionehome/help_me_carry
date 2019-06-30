@@ -153,9 +153,11 @@ class FollowMeNlp:
         if self.activate:
             self.pub_start.publish(False)
             request = data.data
+            print(request)
             # 認識した文字列が何か決定する
             request_list = ['follow me', 'stop following me', 'here is the car', 'yes', 'no']
             if request in request_list:
+                print("success_debug")
                 max = 0
                 answer = ''
                 for q in request_list:
@@ -167,6 +169,7 @@ class FollowMeNlp:
                 rospy.loginfo("robot heard: %s", answer)
                 self.judge(answer)
             else:
+                print("noise_debug")
                 self.pub_start.publish(True)
     
     # 発話が終了したメッセージを受け取る
@@ -198,8 +201,7 @@ class FollowMeNlp:
         self.stop_flag = 'False'
         self.speak_flag = False
         self.activate = False
-        self.log_file_name = "{}/log{}.txt".format(os.path.join(os.path.dirname(os.path.abspath(__file__)), "log"),
-                                                   datetime.datetime.now())
+        self.log_file_name = "{}/log{}.txt".format(os.path.join(os.path.dirname(os.path.abspath(__file__)), "log"), datetime.datetime.now())
 
 
 if __name__ == '__main__':
