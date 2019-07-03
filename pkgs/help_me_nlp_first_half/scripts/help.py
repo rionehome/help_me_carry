@@ -55,7 +55,6 @@ class Help:
                 return
         if yes_or_no == 'yes':
             self.start_speaking('OK, I take this bag to {}'.format(target))
-            self.start_speaking('Sorry, I have no arm. So, I want you to put your bag on plate.')
             self.put_flag = True
             time.sleep(5)
             self.start_speaking('Did you put your bag?')
