@@ -86,6 +86,8 @@ class Help:
                 self.start_resume.publish(True)
             else:
                 self.start_speaking('Sorry, please say again')
+                self.chenge_dict.publish("take_sphinx.dict")
+                self.chenge_gram.publish("take_sphinx.gram")
                 # self.start_resume.publish('help')
                 self.start_resume.publish(True)
                 self.loop_count += 1
