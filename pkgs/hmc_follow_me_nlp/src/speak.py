@@ -13,6 +13,7 @@ class Speak:
         # ビープ音のディレクトリの絶対パスを変数に設定
         beep_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'beep')
         # ビープ音 発話
+        speech=speech.replace("_", " ")
         speech_wave =os.path.join(beep_path, 'speech.wav')
         subprocess.call(['pico2wave', '-w={}'.format(speech_wave), speech])
         subprocess.call('aplay -q --quiet {}'.format(speech_wave), shell=True)
