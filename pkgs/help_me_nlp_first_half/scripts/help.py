@@ -33,9 +33,7 @@ class Help:
             print('place:{}'.format(word_list[0]))
             self.target_place = word_list[0]
             self.start_speaking('I will take this bag to {}? Please answer with yes or no'.format(self.target_place))
-            
-            while not self.finish_speaking_flag:
-                continue
+
             # self.start_resume.publish('yes_no')
             self.chenge_dict.publish("yes_no_sphinx.dict")
             self.chenge_gram.publish("yes_no_sphinx.gram")
@@ -45,8 +43,6 @@ class Help:
         if self.put_flag:
             if yes_or_no == 'yes':
                 self.start_speaking('OK, I take this bag to {}'.format(target))
-                while not self.finish_speaking_flag:
-                    continue
                 self.send_place_msg(target)
                 self.start_flag = False
                 self.put_flag = False
@@ -55,22 +51,14 @@ class Help:
             else:
                 time.sleep(5)
                 self.start_speaking('Did you put your bag?')
-                while not self.finish_speaking_flag:
-                    continue
                 self.start_resume.publish(True)
                 return
         if yes_or_no == 'yes':
             self.start_speaking('OK, I take this bag to {}'.format(target))
-            while not self.finish_speaking_flag:
-                continue
             self.start_speaking('Sorry, I have no arm. So, I want you to put your bag on plate.')
-            while not self.finish_speaking_flag:
-                continue
             self.put_flag = True
             time.sleep(5)
             self.start_speaking('Did you put your bag?')
-            while not self.finish_speaking_flag:
-                continue
             self.start_resume.publish(True)  # 録音
         else:
             if self.loop_count >= 2:
@@ -86,8 +74,6 @@ class Help:
                 self.start_resume.publish(True)
             else:
                 self.start_speaking('Sorry, please say again')
-                while not self.finish_speaking_flag:
-                    continue
                 self.chenge_dict.publish("take_sphinx.dict")
                 self.chenge_gram.publish("take_sphinx.gram")
                 # self.start_resume.publish('help')
@@ -98,6 +84,8 @@ class Help:
         self.finish_speaking_flag = False
         print(sentence)
         self.speak.publish(sentence)
+        while not self.finish_speaking_flag:
+            continue
     
     ###############################################################################
     def start_speech(self, data):  # activateを受け取ったら処理を開始
