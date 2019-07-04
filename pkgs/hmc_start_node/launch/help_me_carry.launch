@@ -26,5 +26,6 @@
 	<include file="$(find help_me_nlp_first_half)/launch/help.launch"/>
 	<node pkg="hmc_human_detection" name="hmc_human_detection" output="screen" respawn="false" type="hmc_human_detection_main.py"/>
 	<include file="$(find help_me_nlp_second_half)/launch/help_me_nlp_second_half.launch"/>
+    <include file="$(find arm)/launch/arm.launch"/>
 
 </launch>
