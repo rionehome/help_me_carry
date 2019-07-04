@@ -87,6 +87,7 @@ class FollowMeNlp:
         # Follow me
         if self.follow_me_flag != 'Finish':
             if answer == 'follow me' and self.follow_me_flag == "False":
+                # Follow_me開始
                 self.follow_me_flag = 'True'
                 self.speak('Should I start following you?')
                 self.pub_start.publish(True)
@@ -94,11 +95,17 @@ class FollowMeNlp:
             elif (answer == 'yes') and (self.follow_me_flag == 'True'):
                 self.follow_me_flag = 'Finish'
                 self.stop_flag = 'False'
-                self.speak('When we arrive at the destination, please say stop following me.')
+                self.speak('OK, I start follow you.')
+                self.speak('When we arrive at the destination, please say, stop, following me.')
                 self.pub.publish('start')  # 制御に'start'をpublish (***follow me が始まる***)
                 print('== Follow me....... ==')
-                self.speak('I am ready to start following you.')
+                # self.speak('I am ready to start following you.')
+
+                # Follow_me中は音声認識を止める
+                self.pub_start.publish(False)
+                self.hot_word()
                 self.pub_start.publish(True)
+
             # 'No'の時
             elif (answer == 'no') and (self.follow_me_flag == 'True'):
                 self.follow_me_flag = 'False'
@@ -112,16 +119,19 @@ class FollowMeNlp:
         # Stop follow me
         elif (self.follow_me_flag == 'Finish') and (self.stop_flag != 'Finish'):
             if ((answer == 'stop following me') or (answer == 'here is the car')) and (self.stop_flag == 'False'):
+                # Follow_me停止
                 self.stop_flag = 'True'
-                self.speak('Should I stop following you?')
+                #self.speak('Should I stop following you?')
+                self.speak('is Here the car?, yes or no.')
                 self.pub_start.publish(True)
             # 'Yes'の時
             elif (answer == 'yes') and (self.stop_flag == 'True'):
                 self.stop_flag = 'Finish'
                 self.follow_me_flag = 'False'
                 self.pub.publish('stop')  # 制御に'stop'をpublish (***follow me が終わる***)
-                self.speak('OK, I will stop. Please give me next command.')
-                
+                #self.speak('OK, I will stop. Please give me next command.')
+                self.speak('OK, Here is the car. Please give me next command.')
+
                 self.activate = False
                 print('== Stop follow me...... ==')
                 
