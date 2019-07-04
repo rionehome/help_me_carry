@@ -33,7 +33,7 @@ class Help:
             word_list = get_word.main(sentense.decode('utf-8'))
             print('place:{}'.format(word_list[0]))
             self.target_place = word_list[0]
-            self.start_speaking('I will take this bag to {}? Please answer with yes or no'.format(self.target_place))
+            self.start_speaking('I will take this bag to {}? yes or no'.format(self.target_place))
 
             # self.start_resume.publish('yes_no')
             self.chenge_dict.publish("yes_no_sphinx.dict")
@@ -52,8 +52,8 @@ class Help:
             if yes_or_no == 'yes':
                 # 受け取ったから移動開始
                 self.arm_pub.publish()
-                self.start_speaking('OK, I take this bag to {}'.format(target))
-                self.arm_pub.publish(0)
+                self.start_speaking('OK, I go to the {}'.format(target))
+                self.arm_pub.publish(2)
                 rospy.sleep(3)
                 self.send_place_msg(target)
                 self.start_flag = False
@@ -70,7 +70,7 @@ class Help:
         # こっちがまず先
         if yes_or_no == 'yes':
             # 場所名が合ってる時
-            self.start_speaking('OK, I take this bag to {}'.format(target))
+            self.start_speaking('OK, I take this bag to the {}'.format(target))
             self.arm_pub.publish(1)
             self.start_speaking("Please put your bag in my hand.")
             self.put_flag = True
@@ -145,6 +145,11 @@ class Help:
     def navigation_goal_callback(self, data):
         if self.activate:
             self.activate = False
+            self.start_speaking('I put the bag')
+            self.arm_pub.publish(3)
+            rospy.sleep(6)
+            self.arm_pub.publish(4)
+            rospy.sleep(4)
             # 次のノードに処理を渡す
             self.next_pub.publish(Activate(id=2))
 
