@@ -33,7 +33,7 @@ class Help:
             word_list = get_word.main(sentense.decode('utf-8'))
             print('place:{}'.format(word_list[0]))
             self.target_place = word_list[0]
-            self.start_speaking('I will take this bag to {}? yes or no'.format(self.target_place))
+            self.start_speaking('I will take this bag to {}? yes or no.'.format(self.target_place))
 
             # self.start_resume.publish('yes_no')
             self.chenge_dict.publish("yes_no_sphinx.dict")
@@ -63,7 +63,7 @@ class Help:
             else:
                 # 受け取ってないので待機
                 time.sleep(5)
-                self.start_speaking('Did you put your bag?')
+                self.start_speaking('Did you put your bag? yes or no.')
                 self.start_resume.publish(True)
                 return
 
@@ -80,7 +80,7 @@ class Help:
             # <- ここまで
 
             # 置いたか確認
-            self.start_speaking('Did you put your bag?')
+            self.start_speaking('Did you put your bag? yes or no.')
             self.start_resume.publish(True)  # 録音
             # で、またこの関数が呼ばれる(ただし上のif文に入る)
         else:
