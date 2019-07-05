@@ -167,13 +167,14 @@ class FollowMeNlp:
             request_list = ['follow me', 'stop following me', 'here is the car', 'yes', 'no']
             if request in request_list:
                 print("success_debug")
-                max = 0
-                answer = ''
-                for q in request_list:
-                    level = self.get_similar(request, q)
-                    if level > max:
-                        max = level
-                        answer = q
+                answer=request
+                # max = 0
+                # answer = ''
+                # for q in request_list:
+                #     level = self.get_similar(request, q)
+                #     if level > max:
+                #         max = level
+                #         answer = q
                 self.log_file(answer, "h")
                 rospy.loginfo("robot heard: %s", answer)
                 self.judge(answer)
