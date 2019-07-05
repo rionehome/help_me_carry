@@ -18,7 +18,7 @@ class HmcHumanDetection:
         self.pub_start = rospy.Publisher("/human_detection/start", String, queue_size=10)
         self.pub_next = rospy.Publisher('/help_me_carry/activate', Activate, queue_size=10)
         rospy.Subscriber("/help_me_carry/activate", Activate, self.callback_activate)
-        rospy.Subscriber("/human_detection/finish", Bool, self.callback_finish)
+        rospy.Subscriber("/navigation_human_detect/goal", Bool, self.callback_finish)
         
         rospy.spin()
     
