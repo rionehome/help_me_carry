@@ -33,7 +33,7 @@ class HmcHumanDetection:
         """
         if data.id == self.no:
             print("human_detection_nlp")
-            time.sleep(3)
+            #time.sleep(3)
             print("wait")
             # HumanDetectionのノードに開始の合図を送る
             self.pub_start.publish("start")
