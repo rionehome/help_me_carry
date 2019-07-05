@@ -54,7 +54,7 @@ class Help:
                 self.arm_pub.publish()
                 self.start_speaking('OK, I go to the {}'.format(target))
                 self.arm_pub.publish(2)
-                rospy.sleep(3)
+                rospy.sleep(2)
                 self.send_place_msg(target)
                 self.start_flag = False
                 self.put_flag = False
@@ -76,7 +76,7 @@ class Help:
             self.put_flag = True
 
             # <- アームに対してpublish
-            time.sleep(5)
+            time.sleep(3)
             # <- ここまで
 
             # 置いたか確認
@@ -147,9 +147,9 @@ class Help:
             self.activate = False
             self.start_speaking('I put the bag')
             self.arm_pub.publish(3)
-            rospy.sleep(6)
+            rospy.sleep(5)
             self.arm_pub.publish(4)
-            rospy.sleep(4)
+            rospy.sleep(3)
             # 次のノードに処理を渡す
             self.next_pub.publish(Activate(id=2))
 
