@@ -96,7 +96,6 @@ class FollowMeNlp:
                 self.follow_me_flag = 'Finish'
                 self.stop_flag = 'False'
                 self.speak('OK, I start follow you.')
-                self.speak('When we arrive at the destination, please say, stop, following me.')
                 self.pub.publish('start')  # 制御に'start'をpublish (***follow me が始まる***)
                 print('== Follow me....... ==')
                 # self.speak('I am ready to start following you.')
