@@ -3,7 +3,7 @@
 from hmc_start_node.msg import Activate
 import rospy
 from sound_system.srv import NLPService
-from std_msgs.msg import String, Bool
+from std_msgs.msg import String, Bool, Int32
 import get_word
 import os
 import time
@@ -11,11 +11,12 @@ from pocketsphinx import get_model_path
 
 
 class Help:
+
     def send_place_msg(self, place):  # 場所を伝えて次のノードにバトンタッチ
         # navigationに場所を伝える
         rospy.wait_for_service('/sound_system/nlp', timeout=1)
         response = rospy.ServiceProxy('/sound_system/nlp', NLPService)('Please go to {}'.format(place))
-        print response.response
+        print(response.response)
         if "OK" in response.response:
             navigation_wait = True
             while navigation_wait:
@@ -24,69 +25,94 @@ class Help:
             # 次のノードに処理を渡す
             self.activate = False
             self.next_pub.publish(Activate(id=2))
-    
+
     def main(self, sentense):  # 最初の音声認識。場所を判断。
         if self.start_flag:
             print(sentense)
-            
+
             word_list = get_word.main(sentense.decode('utf-8'))
             print('place:{}'.format(word_list[0]))
             self.target_place = word_list[0]
-            self.start_speaking('I will take this bag to {}? Please answer with yes or no'.format(self.target_place))
+            self.start_speaking('I will take this bag to {}? yes or no.'.format(self.target_place))
 
             # self.start_resume.publish('yes_no')
             self.chenge_dict.publish("yes_no_sphinx.dict")
             self.chenge_gram.publish("yes_no_sphinx.gram")
             self.start_resume.publish(True)
-    
+
     def yes_no_recognition(self, yes_or_no, target):  # yes or noを判断。場所を確認
+        """
+        場所を教えられたあとに、場所を復唱してあっているかの確認
+        :param yes_or_no:
+        :param target:
+        :return:
+        """
+        # こっちがあと
         if self.put_flag:
             if yes_or_no == 'yes':
-                self.start_speaking('OK, I take this bag to {}'.format(target))
+                # 受け取ったから移動開始
+                self.arm_pub.publish()
+                self.start_speaking('OK, I go to the {}'.format(target))
+                self.arm_pub.publish(2)
+                rospy.sleep(2)
                 self.send_place_msg(target)
                 self.start_flag = False
                 self.put_flag = False
                 self.txt = ''
                 return
             else:
+                # 受け取ってないので待機
                 time.sleep(5)
-                self.start_speaking('Did you put your bag?')
+                self.start_speaking('Did you put your bag? yes or no.')
                 self.start_resume.publish(True)
                 return
+
+        # こっちがまず先
         if yes_or_no == 'yes':
-            self.start_speaking('OK, I take this bag to {}'.format(target))
-            self.start_speaking('Sorry, I have no arm. So, I want you to put your bag on plate.')
+            # 場所名が合ってる時
+            self.start_speaking('OK, I take this bag to the {}'.format(target))
+            self.arm_pub.publish(1)
+            self.start_speaking("Please put your bag in my hand.")
             self.put_flag = True
-            time.sleep(5)
-            self.start_speaking('Did you put your bag?')
+
+            # <- アームに対してpublish
+            time.sleep(3)
+            # <- ここまで
+
+            # 置いたか確認
+            self.start_speaking('Did you put your bag? yes or no.')
             self.start_resume.publish(True)  # 録音
+            # で、またこの関数が呼ばれる(ただし上のif文に入る)
         else:
+            # 間違っている時
             if self.loop_count >= 2:
+                # 誤認識の回数が２回を超えた時
                 # 場所情報をランダムに発話していく.
                 place_list = ['bed', 'kitchen', 'car', 'living room']
                 self.index = self.index + 1
                 self.target_place = place_list[self.index % len(place_list)]
-                
+
                 self.start_speaking('Is it {} ?'.format(self.target_place))
                 # self.start_resume.publish('yes_no')
                 self.chenge_dict.publish("yes_no_sphinx.dict")
                 self.chenge_gram.publish("yes_no_sphinx.gram")
                 self.start_resume.publish(True)
             else:
+                # 誤認識の回数が２回未満の時
                 self.start_speaking('Sorry, please say again')
                 self.chenge_dict.publish("take_sphinx.dict")
                 self.chenge_gram.publish("take_sphinx.gram")
                 # self.start_resume.publish('help')
                 self.start_resume.publish(True)
                 self.loop_count += 1
-    
+
     def start_speaking(self, sentence):
         self.finish_speaking_flag = False
         print(sentence)
         self.speak.publish(sentence)
         while not self.finish_speaking_flag:
             continue
-    
+
     ###############################################################################
     def start_speech(self, data):  # activateを受け取ったら処理を開始
         if data.id == 1:
@@ -97,7 +123,7 @@ class Help:
             self.chenge_gram.publish("take_sphinx.gram")
             # self.start_resume.publish('help')
             self.start_resume.publish(True)
-    
+
     def get_txt(self, sentence):  # 音声認識の結果を取得
         # self.start_resume.publish('stop')  # 音声認識を止める
         self.start_resume.publish(False)
@@ -111,42 +137,49 @@ class Help:
                     self.main(self.txt)
             else:
                 self.start_resume.publish(True)
-    
+
     def finish_speaking(self, data):  # 発話終了合図を受ける
         if data.data:
             self.finish_speaking_flag = True
-    
+
     def navigation_goal_callback(self, data):
         if self.activate:
             self.activate = False
+            self.start_speaking('I put the bag')
+            self.arm_pub.publish(3)
+            rospy.sleep(5)
+            self.arm_pub.publish(4)
+            rospy.sleep(3)
             # 次のノードに処理を渡す
             self.next_pub.publish(Activate(id=2))
-    
+
     ########################################################################################
     def __init__(self):
         rospy.init_node('help_me_nlp_first_half_help', anonymous=True)
-        
+
         self.start_resume = rospy.Publisher('/sound_system/recognition_start', Bool, queue_size=10)  # 音声認識開始
-        
+
         self.speak = rospy.Publisher('/hmc_follow_me_nlp/speak_sentence', String, queue_size=10)  # 発話
-        
+
         self.next_pub = rospy.Publisher('/help_me_carry/activate', Activate, queue_size=10)  # 次のノードに渡す
-        
+
         self.chenge_dict = rospy.Publisher('/sound_system/sphinx/dict', String, queue_size=10)
         self.chenge_gram = rospy.Publisher('/sound_system/sphinx/gram', String, queue_size=10)
-        
+
+        self.arm_pub = rospy.Publisher('/arm/control', Int32, queue_size=10)  # Arm
+
         rospy.Subscriber('/help_me_carry/activate', Activate, self.start_speech)  # ノードを起動
-        
+
         rospy.Subscriber('/sound_system/recognition_result', String, self.get_txt)  # 音声認識結果取得
         rospy.Subscriber('/hmc_follow_me_nlp/finish_speaking', Bool, self.finish_speaking)  # 発話終了
-        
+
         rospy.Subscriber('/navigation/goal', Bool, self.navigation_goal_callback)
-        
+
         self.loop_count = 0
         self.index = 0
         self.model_path = get_model_path()
         self.dic_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'dictionary')
-        
+
         self.navigation_wait = False
         self.activate = False
         self.start_flag = False

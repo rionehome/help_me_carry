@@ -4,24 +4,24 @@ import time
 
 from hmc_start_node.msg import Activate
 import rospy
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, String
 
 
 class HmcHumanDetection:
-
+    
     def __init__(self):
-
+        
         # HumanDetectionが全体から割り当てられたID
         self.no = 2
-
+        
         rospy.init_node("hmc_navigation_main", anonymous=True)
-        self.pub_start = rospy.Publisher("/human_detection/start", Bool, queue_size=10)
+        self.pub_start = rospy.Publisher("/human_detection/start", String, queue_size=10)
         self.pub_next = rospy.Publisher('/help_me_carry/activate', Activate, queue_size=10)
         rospy.Subscriber("/help_me_carry/activate", Activate, self.callback_activate)
-        rospy.Subscriber("/human_detection/finish", Bool, self.callback_finish)
-
+        rospy.Subscriber("/navigation_human_detect/goal", Bool, self.callback_finish)
+        
         rospy.spin()
-
+    
     def callback_activate(self, data):
         # type: (Activate) -> None
         """
@@ -33,11 +33,11 @@ class HmcHumanDetection:
         """
         if data.id == self.no:
             print("human_detection_nlp")
-            time.sleep(3)
+            #time.sleep(3)
             print("wait")
             # HumanDetectionのノードに開始の合図を送る
-            self.pub_start.publish(True)
-
+            self.pub_start.publish("start")
+    
     def callback_finish(self, data):
         # type: (Bool) -> None
         """
