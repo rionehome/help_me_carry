@@ -1,5 +1,0 @@
-<launch>
-  <node name="help_me_nlp_second_half_main" pkg="help_me_nlp_second_half" type="main.py" output="screen" />
-  <node name="help_me_nlp_second_half_speak" pkg="help_me_nlp_second_half" type="speak.py" output="screen" />
-  <node name="hlep_me_nlp_second_half_julius_english" pkg="help_me_nlp_second_half" type="recognition_julius_english.py" output="screen" />
-</launch>

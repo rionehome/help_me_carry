@@ -1,3 +1,0 @@
-<launch>
-  <node name="help_me_nlp_second_half_main" pkg="help_me_nlp_second_half" type="main.py" output="screen" />
-</launch>
