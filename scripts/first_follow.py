@@ -64,12 +64,17 @@ class FirstFollow:
         text = self.text_modify(text)
         while True:
             if text == "follow me":
-                # follow me の処理
+                # follow me 開始の処理
                 self.follow_me()
             elif text == "stop following me":
+                # follow me 停止の処理
                 self.stop_follow_me()
             elif text == "here is the car":
+                # 車の場所登録の処理
+                # この処理が終わったら次のノードを起動する
                 self.here_is_the_car()
+                self.next_node_activate()
+                break
 
     def follow_me(self):
         """
