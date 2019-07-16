@@ -196,8 +196,6 @@ class FirstFollow:
         # type: (str) -> bool
         """
         与えられた文字列が Yes もしくは No かを判別する
-
-
         :param text: 処理する文字列
         :return: Yes,Noの時は True それ以外は False
         """
