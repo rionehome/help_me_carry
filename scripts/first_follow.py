@@ -18,37 +18,9 @@ class FirstFollow:
 
         self.activate_no = 1
 
-        rospy.init_node("hmc_follow_me_nlp_main", anonymous=True)
-        rospy.Subscriber("/sound_system/recognition_result", String, self.callback)
+        rospy.init_node("hmc_follow_me", anonymous=True)
 
-        self.pub = rospy.Publisher("/follow_me/control", String, queue_size=10)  # **制御にFollow me 開始停止の合図**
-        self.pub_speak = rospy.Publisher("/hmc_follow_me_nlp/speak_sentence", String, queue_size=10)
-
-        self.pub_start = rospy.Publisher("/sound_system/recognition_start", Bool, queue_size=10)  # 音声認識開始
         self.activate_pub = rospy.Publisher("/help_me_carry/activate", Activate, queue_size=10)
-
-    ########################################################
-    #               Activate関係の処理                     #
-    ########################################################
-    def activate_callback(self, message):
-        # type: (Activate) -> None
-        """
-        指定IDがこのノードのIDなら処理開始
-        :param message: Activateメッセージ
-        :return: なし
-        """
-        if self.activate_no == message.id:
-            self.main()
-
-    def next_node_activate(self):
-        # type: () -> None
-        """
-        次のノード(現在のID+1)に起動コマンドを送る
-        :return: なし
-        """
-        activate = Activate()
-        activate.id = self.activate_no + 1
-        self.activate_pub.publish(activate)
 
     ########################################################
     #       この main関数内が一連の処理の流れとなる          #
@@ -76,6 +48,9 @@ class FirstFollow:
                 self.next_node_activate()
                 break
 
+    ########################################################
+    #               それぞれの分岐する処理                  #
+    ########################################################
     def follow_me(self):
         """
         Follow meの開始の一連の処理
@@ -119,6 +94,29 @@ class FirstFollow:
             self.speak_command_again()
 
     ########################################################
+    #               Activate関係の処理                     #
+    ########################################################
+    def activate_callback(self, message):
+        # type: (Activate) -> None
+        """
+        指定IDがこのノードのIDなら処理開始
+        :param message: Activateメッセージ
+        :return: なし
+        """
+        if self.activate_no == message.id:
+            self.main()
+
+    def next_node_activate(self):
+        # type: () -> None
+        """
+        次のノード(現在のID+1)に起動コマンドを送る
+        :return: なし
+        """
+        activate = Activate()
+        activate.id = self.activate_no + 1
+        self.activate_pub.publish(activate)
+
+    ########################################################
     #         ここからは、ちょっとした細かい処理の関数群         #
     ########################################################
     @staticmethod
@@ -156,7 +154,8 @@ class FirstFollow:
                 self.speak("Please say, Yes or No.")
         return None
 
-    def is_yes(self, text):
+    @staticmethod
+    def is_yes(text):
         # type: (str) -> bool
         """
         与えられたテキストがYesならTrue
