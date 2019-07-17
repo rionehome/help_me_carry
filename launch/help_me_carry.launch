@@ -1,36 +1,16 @@
 <launch>
 
-	<node pkg="emergency_stop" name="emergency_stop" output="screen" respawn="false" type="main.py"/>
-	
-	<include file="$(find freenect_launch)/launch/freenect.launch"/>
-	<include file="$(find turtlebot_bringup)/launch/minimal.launch"/>
-	<include file="$(find turtlebot_custom)/launch/amcl_lidar.launch"/>
-	<include file="$(find turtlebot_custom)/launch/lidar.launch"/>
-	<include file="$(find sound_system)/launch/navigation_nlp.launch"/>
-	<include file="$(find sound_system)/launch/log.launch"/>
-	<include file="$(find sound_system)/launch/hotword.launch"/>
-	<include file="$(find sound_system)/launch/speak.launch"/>
-	<include file="$(find navigation)/launch/navigation.launch"/>
-	<include file="$(find tfpose_ros)/launch/kinect.launch"/>
-	<include file="$(find yes_no_recognition)/launch/yes_no_recognition.launch"/>
-	
-	<node pkg="move" name="MovementVelocityDesignation" respawn="false" type="MovementVelocityDesignation"/>
-	<node pkg="move" name="MovementAmountDesignation" respawn="false" type="MovementAmountDesignation"/>
-    <node pkg="human_detection" name="human_detection" output="screen" respawn="false" type="human_detection_main"/>
-	<node pkg="follow_me" name="Follow" respawn="true" output="screen" type="Follow"/>
+  <node pkg="help_me_carry" name="first" type="first_follow.py" output="screen"/>
+  <node pkg="help_me_carry" name="second" type="second_carry.py" output="screen"/>
+  <node pkg="help_me_carry" name="third" type="third_human_detect.py" output="screen"/>
+  <node pkg="help_me_carry" name="fourth" type="fourth_go_back.py" output="screen"/>
 
-	<node pkg="location" name="location" type="location_manager.py" output="screen">
-  		<param name="info_file" value="mapping"/>
-  	</node>
+  <node pkg="navigation" name="navigation" type="navigation.py" output="screen"/>
+  <node pkg="location" name="location" type="location_manager.py" output="screen">
+  </node>
 
-	<include file="$(find sound_system)/launch/sphinx.launch"/>
-	<include file="$(find hmc_follow_me_nlp)/launch/hmc_follow_me_nlp.launch"/>
-	<include file="$(find help_me_nlp_first_half)/launch/help.launch"/>
-	<node pkg="hmc_human_detection" name="hmc_human_detection" output="screen" respawn="false" type="hmc_human_detection_main.py"/>
-	<include file="$(find help_me_nlp_second_half)/launch/help_me_nlp_second_half.launch"/>
-
-    <include file="$(find arm)/launch/arm.launch"/>
-    <include file="$(find mapping)/launch/load.launch"/>
-    <include file="$(find turtlebot_custom)/launch/rviz.launch"/>
+  <node pkg="sound_system" name="speak" type="speak.py" output="screen"/>
+  <node pkg="sound_system" name="hotword" type="hotword_detector.py" output="screen"/>
+  <node pkg="sound_system" name="sphinx" type="sphinx.py" output="screen"/>
 
 </launch>
