@@ -90,8 +90,7 @@ class AbstractModule(object):
         """
         rospy.ServiceProxy("/sound_system/sphinx/param", StringService)(text)
 
-    @staticmethod
-    def start_recognition():
+    def start_recognition(self):
         # type: () -> str
         """
         Sphinxに対して音声認識を要求し、結果を返す
@@ -99,6 +98,7 @@ class AbstractModule(object):
         """
         response = rospy.ServiceProxy("/sound_system/recognition", StringService)()
         text = response.response
+        text = self.text_modify(text)
         return text
 
     def yes_no_recognition(self):
@@ -146,7 +146,7 @@ class AbstractModule(object):
         :return: 処理後の文字列
         """
         if text is not None:
-            text = text.replace("_", "")
+            text = text.replace("_", " ")
             text = text.lower()
 
         return text
