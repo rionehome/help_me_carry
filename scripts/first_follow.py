@@ -134,7 +134,7 @@ class FirstFollow:
         Sphinxに対して音声認識を要求し、結果を返す
         :return: 認識結果の文字列
         """
-        response = rospy.ServiceProxy("/sound_system/recognition", RecognitionService)()
+        response = rospy.ServiceProxy("/sound_system/recognition", StringService)()
         text = response.response
         return text
 
