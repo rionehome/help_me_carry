@@ -22,7 +22,7 @@ class SecondCarry:
         self.navigation_pub = rospy.Publisher("/navigation/move_command", Location, queue_size=10)
         self.arm_pub = rospy.Publisher('/arm/control', String, queue_size=10)
 
-        rospy.Subscriber('/navigation/goal', Bool, self.navigation_goal_callback)
+        rospy.Subscriber('/navigation/goal', Bool, self.navigation_callback)
 
     ########################################################
     #       この main関数内が一連の処理の流れとなる        #
@@ -242,5 +242,5 @@ class SecondCarry:
 
 
 if __name__ == "__main__":
-    FirstFollow()
+    SecondCarry()
     rospy.spin()
