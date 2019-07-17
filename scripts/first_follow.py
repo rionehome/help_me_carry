@@ -61,7 +61,7 @@ class FirstFollow:
         answer = self.yes_no_recognition()
 
         if self.is_yes(answer):
-            "Follow me 開始"
+            # Follow me 開始
             self.speak("OK, I start follow you.")
             self.follow_pub.publish("start")
 
@@ -78,12 +78,12 @@ class FirstFollow:
         answer = self.yes_no_recognition()
 
         if self.is_yes(answer):
-            "Follow me 停止"
+            # Follow me 停止
             self.speak("OK, I end follow you.")
             self.follow_pub.publish("stop")
 
         else:
-            "もう一度命令を発話するように言う"
+            # もう一度命令を発話するように言う
             self.speak_command_again()
 
     def here_is_the_car(self):
