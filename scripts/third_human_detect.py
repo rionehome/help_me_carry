@@ -24,6 +24,7 @@ class ThirdHumanDetect:
     ########################################################
     def main(self):
         # 現状、人間検出の処理がどうなるか不明なので一旦保留
+        self.speak("Skip human detection.")
         self.next_node_activate()
 
     ########################################################
@@ -54,8 +55,13 @@ class ThirdHumanDetect:
         self.activate_pub.publish(activate)
 
     ########################################################
-    #         ここからは、ちょっとした細かい処理の関数群         #
+    #     ここからは、ちょっとした細かい処理の関数群       #
     ########################################################
+
+    @staticmethod
+    def speak(text):
+        # type: (str) -> None
+        rospy.ServiceProxy("/sound_system/speak", StringService)(text)
 
 
 if __name__ == "__main__":
