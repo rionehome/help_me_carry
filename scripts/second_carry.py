@@ -54,8 +54,9 @@ class SecondCarry(AbstractModule):
         :param message: 移動成功ならTrue、失敗ならFalse
         :return: なし
         """
-        self.put_bag()
-        self.next_node_activate()
+        if self.is_activate:
+            self.put_bag()
+            self.next_node_activate()
 
     ########################################################
     #               それぞれの分岐する処理                    #

@@ -4,12 +4,15 @@
 import rospy
 from sound_system.srv import *
 from hmc_start_node.msg import Activate
+import sys
 
 
 class AbstractModule(object):
 
     def __init__(self, node_name, activate_no):
         # type: (str, int) -> None
+
+        self.is_activate = False
 
         rospy.init_node(node_name)
         self.activate_no = activate_no
@@ -25,10 +28,12 @@ class AbstractModule(object):
         よってこの関数をサブクラス(このクラスを継承したクラス)でオーバライドしておけば、そちらが呼び出される
         :return:
         """
+        raise Exception("main関数がオーバーライドされていません")
+        sys.exit(1)
         pass
 
     ########################################################
-    #               Activate関係の処理                      #
+    #               Activate関係の処理                     #
     ########################################################
     def activate_callback(self, message):
         # type: (Activate) -> None
@@ -38,6 +43,7 @@ class AbstractModule(object):
         :return: なし
         """
         if self.activate_no == message.id:
+            self.is_activate = True
             self.main()
 
     def next_node_activate(self):
@@ -49,6 +55,7 @@ class AbstractModule(object):
         activate = Activate()
         activate.id = self.activate_no + 1
         self.activate_pub.publish(activate)
+        self.is_activate = False
 
     def node_activate(self, no):
         # type: () -> None
@@ -60,9 +67,10 @@ class AbstractModule(object):
         activate = Activate()
         activate.id = no
         self.activate_pub.publish(activate)
+        self.is_activate = False
 
     ########################################################
-    #         ここからは、ちょっとした細かい処理の関数群        #
+    #         ここからは、ちょっとした細かい処理の関数群         #
     ########################################################
     @staticmethod
     def wait_hot_word():

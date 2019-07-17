@@ -61,16 +61,17 @@ class FourthGoBack(AbstractModule):
         :param message: 移動成功ならTrue、失敗ならFalse
         :return: なし
         """
-        is_success = message.data
+        if self.is_activate:
+            is_success = message.data
 
-        if is_success:
-            self.speak("Here is the car.")
+            if is_success:
+                self.speak("Here is the car.")
 
-        else:
-            self.speak("Sorry, I could not move to the car.")
+            else:
+                self.speak("Sorry, I could not move to the car.")
 
-        # すべての処理が終わったのでノードをKillして終了
-        os.system('rosnode kill help_me_carry')
+            # すべての処理が終わったのでノードをKillして終了
+            os.system('rosnode kill help_me_carry')
 
     ########################################################
     #               それぞれの分岐する処理                    #
