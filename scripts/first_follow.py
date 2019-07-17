@@ -7,10 +7,6 @@ from sound_system.srv import *
 from std_msgs.msg import String, Bool
 from location.srv import RegisterLocation
 from hmc_start_node.msg import Activate
-import datetime
-import os
-import math
-import treetaggerwrapper as ttw
 
 
 class FirstFollow:
@@ -37,18 +33,21 @@ class FirstFollow:
             self.wait_hot_word()
             text = self.start_recognition()
             text = self.text_modify(text)
+
             if text == "follow me":
                 # follow me 開始の処理
                 self.follow_me()
+
             elif text == "stop following me":
                 # follow me 停止の処理
                 self.stop_follow_me()
+
             elif text == "here is the car":
                 # 車の場所登録の処理
                 # この処理が終わったら次のノードを起動する
                 self.here_is_the_car()
                 self.next_node_activate()
-                break
+                return
 
     ########################################################
     #               それぞれの分岐する処理                  #
@@ -60,10 +59,12 @@ class FirstFollow:
         """
         self.speak("Should I start following you?")
         answer = self.yes_no_recognition()
+
         if self.is_yes(answer):
             "Follow me 開始"
             self.speak("OK, I start follow you.")
             self.follow_pub.publish("start")
+
         else:
             "もう一度命令を発話するように言う"
             self.speak_command_again()
@@ -75,10 +76,12 @@ class FirstFollow:
         """
         self.speak("Should I end following you?")
         answer = self.yes_no_recognition()
+
         if self.is_yes(answer):
             "Follow me 停止"
             self.speak("OK, I end follow you.")
             self.follow_pub.publish("stop")
+
         else:
             "もう一度命令を発話するように言う"
             self.speak_command_again()
@@ -90,10 +93,12 @@ class FirstFollow:
         """
         self.speak("Is Here the car?, yes or no.")
         answer = self.yes_no_recognition()
+
         if self.is_yes(answer):
             "現在地を「car」で登録"
             self.speak("OK, Here is the car.")
             rospy.ServiceProxy("/navigation/register_current_location", RegisterLocation)("car")
+
         else:
             "もう一度命令を発話するように言う"
             self.speak_command_again()
@@ -153,10 +158,13 @@ class FirstFollow:
         """
         while True:
             answer = self.start_recognition()
+
             if self.is_yes_or_no(answer):
                 return answer
+
             else:
                 self.speak("Please say, Yes or No.")
+
         return None
 
     @staticmethod
@@ -169,6 +177,7 @@ class FirstFollow:
         """
         if text == "yes":
             return True
+
         return False
 
     @staticmethod
@@ -185,6 +194,7 @@ class FirstFollow:
         if text is not None:
             text = text.replace("_", "")
             text = text.lower()
+
         return text
 
     @staticmethod
@@ -206,6 +216,7 @@ class FirstFollow:
         """
         if text == "yes" or text == "no":
             return True
+
         return False
 
 
