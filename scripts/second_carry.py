@@ -16,7 +16,7 @@ class SecondCarry:
 
         self.activate_no = 2
 
-        rospy.init_node("hmc_follow_me", anonymous=True)
+        rospy.init_node("hmc_carry", anonymous=True)
 
         self.activate_pub = rospy.Publisher("/help_me_carry/activate", Activate, queue_size=10)
         self.navigation_pub = rospy.Publisher("/navigation/move_command", Location, queue_size=10)
