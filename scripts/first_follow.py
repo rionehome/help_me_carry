@@ -20,6 +20,8 @@ class FirstFollow:
         self.activate_pub = rospy.Publisher("/help_me_carry/activate", Activate, queue_size=10)
         self.follow_pub = rospy.Publisher('/follow_me/control', String, queue_size=10)
 
+        rospy.Subscriber("/help_me_carry/activate", Activate, self.activate_callback)
+
     ########################################################
     #       この main関数内が一連の処理の流れとなる          #
     ########################################################
@@ -29,7 +31,10 @@ class FirstFollow:
         音声認識したテキストデータからそれぞれの処理の関数を呼び出す
         :return: なし
         """
+        print("Node: Follow Me")
+
         while True:
+            self.change_sphinx_param("follow_me")
             self.wait_hot_word()
             text = self.start_recognition()
             text = self.text_modify(text)
@@ -74,12 +79,12 @@ class FirstFollow:
         Follow meの停止の一連の処理
         :return: なし
         """
-        self.speak("Should I end following you?")
+        self.speak("Can I stop following you?")
         answer = self.yes_no_recognition()
 
         if self.is_yes(answer):
             # Follow me 停止
-            self.speak("OK, I end follow you.")
+            self.speak("OK, I stop.")
             self.follow_pub.publish("stop")
 
         else:
@@ -138,6 +143,16 @@ class FirstFollow:
         rospy.ServiceProxy("/hotword/detect", HotwordService)()
 
     @staticmethod
+    def change_sphinx_param(text):
+        # type: (str) -> None
+        """
+        Sphinxに対して辞書の切り替えを要求
+        :param text: 切り替える辞書の名前
+        :return:
+        """
+        rospy.ServiceProxy("/sound_system/sphinx/param", StringService)(text)
+
+    @staticmethod
     def start_recognition():
         # type: () -> str
         """
@@ -156,6 +171,7 @@ class FirstFollow:
         Yes か No が出るまで聞き直し続ける
         :return: 認識結果の文字列
         """
+        self.change_sphinx_param("yes_no")
         while True:
             answer = self.start_recognition()
 
@@ -204,7 +220,7 @@ class FirstFollow:
 
     def speak_command_again(self):
         # type: () -> None
-        self.speak("OK. Please say the command again.")
+        self.speak("OK, Please say the command again.")
 
     @staticmethod
     def is_yes_or_no(text):

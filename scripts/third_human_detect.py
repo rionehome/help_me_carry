@@ -17,6 +17,7 @@ class ThirdHumanDetect:
 
         rospy.init_node("hmc_human_detect", anonymous=True)
 
+        rospy.Subscriber("/help_me_carry/activate", Activate, self.activate_callback)
         self.activate_pub = rospy.Publisher("/help_me_carry/activate", Activate, queue_size=10)
 
     ########################################################
@@ -24,6 +25,8 @@ class ThirdHumanDetect:
     ########################################################
     def main(self):
         # 現状、人間検出の処理がどうなるか不明なので一旦保留
+        print("Node: Human Detection")
+
         self.speak("Skip human detection.")
         self.next_node_activate()
 

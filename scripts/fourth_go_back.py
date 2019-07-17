@@ -24,6 +24,7 @@ class FourthGoBack:
         self.navigation_pub = rospy.Publisher("/navigation/move_command", Location, queue_size=10)
         self.arm_pub = rospy.Publisher('/arm/control', String, queue_size=10)
 
+        rospy.Subscriber("/help_me_carry/activate", Activate, self.activate_callback)
         rospy.Subscriber('/navigation/goal', Bool, self.navigation_callback)
 
     ########################################################
@@ -37,6 +38,8 @@ class FourthGoBack:
         :param: Activateから飛んできたメッセージ 人間検出成功ならsuccess 失敗ならfailed
         :return: なし
         """
+        print("Node: Go back the Car")
+
         if command == "success":
             # 人を見つけているので対話が発生
             self.speak("Would you help carrying groceries into the house? Please answer yes or no.")
@@ -52,7 +55,7 @@ class FourthGoBack:
 
         else:
             # 人間検出失敗したので何もせずに車まで戻る
-            self.speak("I couldn't find it.")
+            self.speak("I couldn't find the person.")
             self.go_back()
 
     def navigation_callback(self, message):
@@ -143,6 +146,16 @@ class FourthGoBack:
         text = response.response
         return text
 
+    @staticmethod
+    def change_sphinx_param(text):
+        # type: (str) -> None
+        """
+        Sphinxに対して辞書の切り替えを要求
+        :param text: 切り替える辞書の名前
+        :return:
+        """
+        rospy.ServiceProxy("/sound_system/sphinx/param", StringService)(text)
+
     def yes_no_recognition(self):
         # type: () -> str
         """
@@ -151,6 +164,7 @@ class FourthGoBack:
         Yes か No が出るまで聞き直し続ける
         :return: 認識結果の文字列
         """
+        self.change_sphinx_param("yes_no")
         while True:
             answer = self.start_recognition()
 
@@ -199,7 +213,7 @@ class FourthGoBack:
 
     def speak_command_again(self):
         # type: () -> None
-        self.speak("OK. Please say the command again.")
+        self.speak("OK, Please say the command again.")
 
     @staticmethod
     def is_yes_or_no(text):

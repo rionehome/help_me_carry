@@ -22,6 +22,7 @@ class SecondCarry:
         self.navigation_pub = rospy.Publisher("/navigation/move_command", Location, queue_size=10)
         self.arm_pub = rospy.Publisher('/arm/control', String, queue_size=10)
 
+        rospy.Subscriber("/help_me_carry/activate", Activate, self.activate_callback)
         rospy.Subscriber('/navigation/goal', Bool, self.navigation_callback)
 
     ########################################################
@@ -34,7 +35,10 @@ class SecondCarry:
         音声認識したテキストデータからそれぞれの処理の関数を呼び出す
         :return: なし
         """
+        print("Node: Take this bag")
+
         while True:
+            self.change_sphinx_param("take")
             self.wait_hot_word()
             text = self.start_recognition()
             text = self.text_modify(text)
@@ -72,7 +76,7 @@ class SecondCarry:
         answer = self.yes_no_recognition()
 
         if self.is_yes(answer):
-            self.speak("OK, I start follow you.")
+            self.speak("OK.")
             return True
 
         else:
@@ -102,7 +106,7 @@ class SecondCarry:
                 # 荷物を受け取ったので、ナビゲーションに処理が移る
                 self.arm_pub.publish("close")
                 rospy.sleep(1.5)
-                self.start_speaking('OK, I take this bag to the {}'.format(location_name))
+                self.speak('OK, I take this bag to the {}'.format(location_name))
 
                 # 移動命令を飛ばす
                 location = rospy.ServiceProxy("/navigation/request_location", RequestLocation)(location_name).location
@@ -148,7 +152,7 @@ class SecondCarry:
         self.activate_pub.publish(activate)
 
     ########################################################
-    #         ここからは、ちょっとした細かい処理の関数群         #
+    #     ここからは、ちょっとした細かい処理の関数群       #
     ########################################################
     @staticmethod
     def wait_hot_word():
@@ -157,6 +161,16 @@ class SecondCarry:
         :return:
         """
         rospy.ServiceProxy("/hotword/detect", HotwordService)()
+
+    @staticmethod
+    def change_sphinx_param(text):
+        # type: (str) -> None
+        """
+        Sphinxに対して辞書の切り替えを要求
+        :param text: 切り替える辞書の名前
+        :return:
+        """
+        rospy.ServiceProxy("/sound_system/sphinx/param", StringService)(text)
 
     @staticmethod
     def start_recognition():
@@ -177,6 +191,7 @@ class SecondCarry:
         Yes か No が出るまで聞き直し続ける
         :return: 認識結果の文字列
         """
+        self.change_sphinx_param("yes_no")
         while True:
             answer = self.start_recognition()
 
@@ -225,7 +240,7 @@ class SecondCarry:
 
     def speak_command_again(self):
         # type: () -> None
-        self.speak("OK. Please say the command again.")
+        self.speak("OK, Please say the command again.")
 
     @staticmethod
     def is_yes_or_no(text):
