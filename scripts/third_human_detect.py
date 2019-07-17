@@ -18,7 +18,6 @@ class ThirdHumanDetect(AbstractModule):
     ########################################################
     def main(self):
         # 現状、人間検出の処理がどうなるか不明なので一旦保留
-        print("Node: Human Detection")
 
         self.speak("Skip human detection.")
         self.next_node_activate()

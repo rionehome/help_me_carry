@@ -33,7 +33,6 @@ class FourthGoBack(AbstractModule):
         :param: Activateから飛んできたメッセージ 人間検出成功ならsuccess 失敗ならfailed
         :return: なし
         """
-        print("Node: Go back the Car")
 
         if command == "success":
             # 人を見つけているので対話が発生

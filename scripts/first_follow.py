@@ -25,7 +25,6 @@ class FirstFollow(AbstractModule):
         音声認識したテキストデータからそれぞれの処理の関数を呼び出す
         :return: なし
         """
-        print("Node: Follow Me")
 
         while True:
             self.change_sphinx_param("follow_me")

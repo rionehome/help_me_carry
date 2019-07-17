@@ -44,6 +44,7 @@ class AbstractModule(object):
         """
         if self.activate_no == message.id:
             self.is_activate = True
+            self.print_node()
             self.main()
 
     def next_node_activate(self):
@@ -172,3 +173,8 @@ class AbstractModule(object):
             return True
 
         return False
+
+    def print_node(self):
+        print("\n###########################################\n")
+        print("     Node: {}".format(self.__class__.__name__))
+        print("\n###########################################\n")
