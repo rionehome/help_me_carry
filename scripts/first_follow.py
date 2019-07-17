@@ -5,6 +5,7 @@
 import rospy
 from sound_system.srv import *
 from std_msgs.msg import String, Bool
+from location.srv import RegisterLocation
 from hmc_start_node.msg import Activate
 import datetime
 import os
@@ -21,6 +22,7 @@ class FirstFollow:
         rospy.init_node("hmc_follow_me", anonymous=True)
 
         self.activate_pub = rospy.Publisher("/help_me_carry/activate", Activate, queue_size=10)
+        self.follow_pub = rospy.Publisher('/follow_me/control', String, queue_size=10)
 
     ########################################################
     #       この main関数内が一連の処理の流れとなる          #
@@ -31,10 +33,10 @@ class FirstFollow:
         音声認識したテキストデータからそれぞれの処理の関数を呼び出す
         :return: なし
         """
-        self.wait_hot_word()
-        text = self.start_recognition()
-        text = self.text_modify(text)
         while True:
+            self.wait_hot_word()
+            text = self.start_recognition()
+            text = self.text_modify(text)
             if text == "follow me":
                 # follow me 開始の処理
                 self.follow_me()
@@ -61,6 +63,7 @@ class FirstFollow:
         if self.is_yes(answer):
             "Follow me 開始"
             self.speak("OK, I start follow you.")
+            self.follow_pub.publish("start")
         else:
             "もう一度命令を発話するように言う"
             self.speak_command_again()
@@ -75,6 +78,7 @@ class FirstFollow:
         if self.is_yes(answer):
             "Follow me 停止"
             self.speak("OK, I end follow you.")
+            self.follow_pub.publish("stop")
         else:
             "もう一度命令を発話するように言う"
             self.speak_command_again()
@@ -89,6 +93,7 @@ class FirstFollow:
         if self.is_yes(answer):
             "現在地を「car」で登録"
             self.speak("OK, Here is the car.")
+            rospy.ServiceProxy("/navigation/register_current_location", RegisterLocation)("car")
         else:
             "もう一度命令を発話するように言う"
             self.speak_command_again()
