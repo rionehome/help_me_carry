@@ -1,32 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Follow me, 自然言語処理
 
 import rospy
-from sound_system.srv import *
-from std_msgs.msg import String, Bool, Int32
-from location.srv import RegisterLocation, RequestLocation
 from location.msg import Location
-from hmc_start_node.msg import Activate
+from location.srv import RequestLocation
+from std_msgs.msg import String, Bool
+
+from abstract_module import AbstractModule
 
 
-class SecondCarry:
+class SecondCarry(AbstractModule):
 
     def __init__(self):
+        # クラス継承を行う
+        super(SecondCarry, self).__init__(node_name="hmc_carry", activate_no=2)
 
-        self.activate_no = 2
-
-        rospy.init_node("hmc_carry", anonymous=True)
-
-        self.activate_pub = rospy.Publisher("/help_me_carry/activate", Activate, queue_size=10)
         self.navigation_pub = rospy.Publisher("/navigation/move_command", Location, queue_size=10)
         self.arm_pub = rospy.Publisher('/arm/control', String, queue_size=10)
 
-        rospy.Subscriber("/help_me_carry/activate", Activate, self.activate_callback)
         rospy.Subscriber('/navigation/goal', Bool, self.navigation_callback)
 
     ########################################################
-    #       この main関数内が一連の処理の流れとなる        #
+    #       この main 関数内が一連の処理の流れとなる           #
     ########################################################
     def main(self):
         """
@@ -63,7 +58,7 @@ class SecondCarry:
         self.next_node_activate()
 
     ########################################################
-    #               それぞれの分岐する処理                 #
+    #               それぞれの分岐する処理                    #
     ########################################################
     def ask_place(self, location_name):
         # type: (str) -> bool
@@ -127,133 +122,6 @@ class SecondCarry:
         rospy.sleep(1.5)
         self.arm_pub.publish("default")
         rospy.sleep(1.5)
-
-    ########################################################
-    #               Activate関係の処理                     #
-    ########################################################
-    def activate_callback(self, message):
-        # type: (Activate) -> None
-        """
-        指定IDがこのノードのIDなら処理開始
-        :param message: Activateメッセージ
-        :return: なし
-        """
-        if self.activate_no == message.id:
-            self.main()
-
-    def next_node_activate(self):
-        # type: () -> None
-        """
-        次のノード(現在のID+1)に起動コマンドを送る
-        :return: なし
-        """
-        activate = Activate()
-        activate.id = self.activate_no + 1
-        self.activate_pub.publish(activate)
-
-    ########################################################
-    #     ここからは、ちょっとした細かい処理の関数群       #
-    ########################################################
-    @staticmethod
-    def wait_hot_word():
-        """
-        Hotword「hey, ducker」が検知されるまで待機
-        :return:
-        """
-        rospy.ServiceProxy("/hotword/detect", HotwordService)()
-
-    @staticmethod
-    def change_sphinx_param(text):
-        # type: (str) -> None
-        """
-        Sphinxに対して辞書の切り替えを要求
-        :param text: 切り替える辞書の名前
-        :return:
-        """
-        rospy.ServiceProxy("/sound_system/sphinx/param", StringService)(text)
-
-    @staticmethod
-    def start_recognition():
-        # type: () -> str
-        """
-        Sphinxに対して音声認識を要求し、結果を返す
-        :return: 認識結果の文字列
-        """
-        response = rospy.ServiceProxy("/sound_system/recognition", StringService)()
-        text = response.response
-        return text
-
-    def yes_no_recognition(self):
-        # type: () -> str
-        """
-        Sphinxに対して音声認識を要求し、結果を返す
-        ただし返答が Yes か Noの時のみ返す
-        Yes か No が出るまで聞き直し続ける
-        :return: 認識結果の文字列
-        """
-        self.change_sphinx_param("yes_no")
-        while True:
-            answer = self.start_recognition()
-
-            if self.is_yes_or_no(answer):
-                return answer
-
-            else:
-                self.speak("Please say, Yes or No.")
-
-        return None
-
-    @staticmethod
-    def is_yes(text):
-        # type: (str) -> bool
-        """
-        与えられたテキストがYesならTrue
-        No ならFalseを返す
-        :return: 文字列
-        """
-        if text == "yes":
-            return True
-
-        return False
-
-    @staticmethod
-    def text_modify(text):
-        # type: (str) -> str
-        """
-        与えられた文字列 に以下の処理を加える
-
-        1. 文字列内のアンダースコア( _ ) をすべて半角スペースに変換
-        2. 文字列内のアルファベットをすべて小文字化
-        :param text: 処理する文字列
-        :return: 処理後の文字列
-        """
-        if text is not None:
-            text = text.replace("_", "")
-            text = text.lower()
-
-        return text
-
-    @staticmethod
-    def speak(text):
-        # type: (str) -> None
-        rospy.ServiceProxy("/sound_system/speak", StringService)(text)
-
-    def speak_command_again(self):
-        # type: () -> None
-        self.speak("OK, Please say the command again.")
-
-    @staticmethod
-    def is_yes_or_no(text):
-        # type: (str) -> bool
-        """
-        与えられた文字列が Yes もしくは No かを判別する
-        :param text: 処理する文字列
-        :return: Yes,Noの時は True それ以外は False
-        """
-        if text == "yes" or text == "no":
-            return True
-
-        return False
 
 
 if __name__ == "__main__":
