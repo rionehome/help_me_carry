@@ -81,23 +81,13 @@ class AbstractModule(object):
         """
         rospy.ServiceProxy("/hotword/detect", HotwordService)()
 
-    @staticmethod
-    def change_sphinx_param(text):
-        # type: (str) -> None
-        """
-        Sphinxに対して辞書の切り替えを要求
-        :param text: 切り替える辞書の名前
-        :return:
-        """
-        rospy.ServiceProxy("/sound_system/sphinx/param", StringService)(text)
-
-    def start_recognition(self):
+    def start_recognition(self, param=None):
         # type: () -> str
         """
         Sphinxに対して音声認識を要求し、結果を返す
         :return: 認識結果の文字列
         """
-        response = rospy.ServiceProxy("/sound_system/recognition", StringService)()
+        response = rospy.ServiceProxy("/sound_system/recognition", StringService)(param)
         text = response.response
         text = self.text_modify(text)
         return text
@@ -110,9 +100,8 @@ class AbstractModule(object):
         Yes か No が出るまで聞き直し続ける
         :return: 認識結果の文字列
         """
-        self.change_sphinx_param("yes_no")
         while True:
-            answer = self.start_recognition()
+            answer = self.start_recognition("yes_no")
 
             if self.is_yes_or_no(answer):
                 return answer

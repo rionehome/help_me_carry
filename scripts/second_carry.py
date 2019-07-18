@@ -32,9 +32,8 @@ class SecondCarry(AbstractModule):
         """
 
         while True:
-            self.change_sphinx_param("take")
             self.wait_hot_word()
-            text = self.start_recognition()
+            text = self.start_recognition("take")
             text = self.text_modify(text)
 
             if "take this bag to " in text:

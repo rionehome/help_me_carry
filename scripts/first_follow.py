@@ -27,9 +27,8 @@ class FirstFollow(AbstractModule):
         """
 
         while True:
-            self.change_sphinx_param("follow_me")
             self.wait_hot_word()
-            text = self.start_recognition()
+            text = self.start_recognition("follow_me")
 
             if text == "follow me":
                 # follow me 開始の処理
