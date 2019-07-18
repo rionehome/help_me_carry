@@ -155,10 +155,21 @@ class AbstractModule(object):
     @staticmethod
     def speak(text):
         # type: (str) -> None
+        """
+        Sound_System に対して発話を要求する
+        発話が終了するまで待機
+        :param text: 発話内容
+        :return: なし
+        """
         rospy.ServiceProxy("/sound_system/speak", StringService)(text)
 
     def speak_command_again(self):
         # type: () -> None
+        """
+        もう一度発話するように促す関数
+        同じような処理が複数回呼ばれるので関数化してある
+        :return:
+        """
         self.speak("OK, Please say the command again.")
 
     @staticmethod
@@ -175,6 +186,11 @@ class AbstractModule(object):
         return False
 
     def print_node(self):
+        # type: () -> None
+        """
+        このクラスの名前を表示
+        :return: なし
+        """
         print("\n###########################################\n")
         print("     Node: {}".format(self.__class__.__name__))
         print("\n###########################################\n")
