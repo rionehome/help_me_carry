@@ -11,8 +11,7 @@ class HmcNlp(AbstractModule):
 
         rospy.init_node("hmc_nlp")
 
-        self.follow_me_pub = rospy.Publisher("/follow_me/control", String, queue_size=10)
-        self.nlp_pub = rospy.Publisher("/natural_language_processing/speak_sentence", String, queue_size=10)
+        self.execute_func_pub = rospy.Publisher("/hmc_nlp/function", String, queue_size=10)
         self.place_info_pub = rospy.Publisher("/hmc/control", String, queue_size=10)
 
         rospy.Subscriber("/natural_language_processing/function_argument", String, self.function_argument_callback)
@@ -53,10 +52,7 @@ class HmcNlp(AbstractModule):
         :return: なし
         """
         print "follow me"
-        self.speak_text = "When you arrive target point, please say stop following me"
-        self.follow_me_pub.publish('start')
-        self.speak(self.speak_text)
-        self.nlp_pub.publish(self.speak_text)
+        self.execute_func_pub.publish("follow_me")
 
     def stop_follow_me(self):
         # type: () -> None
@@ -65,22 +61,18 @@ class HmcNlp(AbstractModule):
         :return: なし
         """
         print "stop follow me"
-        self.follow_me_pub.publish('stop')
-        self.speak_text = "May I help you"
-        self.speak(self.speak_text)
-        self.nlp_pub.publish(self.speak_text)
+        self.execute_func_pub.publish("stop_follow_me")
 
     def send_place_msg(self, place):
         # type: (String) -> None
         """
         bagを運ぶ先の場所情報をpublishする
-        :param place: String
+        :param place: 場所名
         :return: なし
         """
         print "send_place_msg"
         print place
-        self.place_info_pub.publish(place)
-
+        self.execute_func_pub.publish(place)
 
 if __name__ == "__main__":
     HmcNlp()
