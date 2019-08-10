@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import rospy
-from std_msgs.msg import String
+from std_msgs.msg import String, Int32
 from abstract_module import AbstractModule
 
 
@@ -10,9 +10,9 @@ class HmcSendPlaceMsg(AbstractModule):
         super(HmcSendPlaceMsg, self).__init__(node_name="hmc_send_place_msg")
 
         self.place_list = ["kitchen", "car", "bed_room", "living_room"]
-        rospy.init_node("hmc_send_place_msg")
 
         self.place_info_pub = rospy.Publisher("/hmc/control", String, queue_size=10)
+        self.arm_pub = rospy.Publisher('/arm/control', Int32, queue_size=10)
 
         rospy.Subscriber("/hmc_nlp/function", String, self.execute_function)
 
@@ -34,6 +34,10 @@ class HmcSendPlaceMsg(AbstractModule):
         :param place: 場所名
         :return: なし
         """
+        self.arm_pub.publish()
+        self.speak("OK, I go to the {}".format(place))
+        self.arm_pub.publish(2)
+        rospy.sleep(3)
         self.place_info_pub.publish(place)
 
 

@@ -3,13 +3,12 @@
 import rospy
 from std_msgs.msg import String
 from abstract_module import AbstractModule
+from sound_system.srv import NLPService
 
 
 class HmcFollowMe(AbstractModule):
     def __init__(self):
         super(HmcFollowMe, self).__init__(node_name="hmc_follow_me")
-
-        rospy.init_node("hmc_follow_me")
         self.follow_me_pub = rospy.Publisher("/follow_me/control", String, queue_size=10)
 
         rospy.Subscriber("/hmc_nlp/function", String, self.execute_function)
@@ -34,10 +33,10 @@ class HmcFollowMe(AbstractModule):
         follow meを実行する
         :return: なし
         """
-        self.speak_text = "When you arrive target point, please say stop following me"
+        speak_text = "When you arrive target point, please say stop following me."
         self.follow_me_pub.publish('start')
-        self.speak(self.speak_text)
-        self.nlp_pub.publish(self.speak_text)
+        self.speak(speak_text)
+        self.nlp_pub.publish(speak_text)
 
     def stop_follow_me(self):
         # type: () -> None
@@ -46,9 +45,12 @@ class HmcFollowMe(AbstractModule):
         :return: なし
         """
         self.follow_me_pub.publish('stop')
-        self.speak_text = "May I help you"
-        self.speak(self.speak_text)
-        self.nlp_pub.publish(self.speak_text)
+        # locationに車の位置を記録
+        rospy.wait_for_service('/sound_system/nlp', timeout=1)
+        print rospy.ServiceProxy('/sound_system/nlp', NLPService)('Here is car')
+        speak_text = "May I help you?"
+        self.speak(speak_text)
+        self.nlp_pub.publish(speak_text)
 
 
 if __name__ == "__main__":
