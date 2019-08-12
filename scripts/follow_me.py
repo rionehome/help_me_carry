@@ -3,7 +3,6 @@
 import rospy
 from std_msgs.msg import String
 from abstract_module import AbstractModule
-from sound_system.srv import NLPService
 
 
 class HmcFollowMe(AbstractModule):
@@ -21,6 +20,7 @@ class HmcFollowMe(AbstractModule):
         本関数では空である.
         :return: なし
         """
+        self.print_node(argument.data)
         speak_text = "When you arrive target point, please say stop following me."
         self.follow_me_pub.publish('start')
         self.speak(speak_text)

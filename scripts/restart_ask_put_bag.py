@@ -13,13 +13,14 @@ class HmcRestartAskPutBag(AbstractModule):
         rospy.Subscriber("/natural_language_processing/restart_ask_put_bag", String, self.restart_ask_put_bag)
 
     def restart_ask_put_bag(self, argument):
-        # type: () -> None
+        # type: (String) -> None
         """
         少し待った後に,再度バッグを置いたかを確認する.
         :param: argument: 関数用の引数が格納されている.
         本関数では空である.
         :return: なし
         """
+        self.print_node(argument.data)
         self.speak("OK.")
         time.sleep(3)
         speak_text = "Did you put your bag?"

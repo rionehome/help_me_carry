@@ -22,6 +22,7 @@ class HmcReleaseBag(AbstractModule):
         本関数では空である.
         :return: なし
         """
+        self.print_node(argument.data)
         self.speak('I put the bag')
         self.arm_pub.publish(3)
         rospy.sleep(6)

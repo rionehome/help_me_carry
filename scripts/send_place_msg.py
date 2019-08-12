@@ -1,32 +1,69 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import rospy
+import rospy, actionlib
 from std_msgs.msg import String, Int32
 from location.srv import *
 from abstract_module import AbstractModule
+from move.msg import AmountAction
+from move_base_msgs.msg import MoveBaseGoal, MoveBaseAction
+from geometry_msgs.msg import Point, Quaternion
+from module.rviz_marker import RvizMarker
 
 
 class HmcSendPlaceMsg(AbstractModule):
     def __init__(self):
         super(HmcSendPlaceMsg, self).__init__(node_name="hmc_send_place_msg")
+        self.place = ""
 
-        self.arm_pub = rospy.Publisher('/arm/control', Int32, queue_size=10)
+        self.arm_pub = rospy.Publisher("/arm/control", Int32, queue_size=10)
+        self.execute_function = rospy.Publisher("/natural_language_processing/release_bag", String, queue_size=10)
+        self.move_base_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction)
+        self.amount_client = actionlib.SimpleActionClient("/move/amount", AmountAction)
+        self.marker = RvizMarker()
 
         rospy.Subscriber("/natural_language_processing/send_place_msg", String, self.send_place_msg)
+        rospy.Subscriber("/hmc/send_place_msg", String, self.save_place_info)
 
-    def send_place_msg(self, place):
+    def send_place_msg(self, argument):
         # type: (String) -> None
         """
         bagを運ぶ先の場所情報をpublishする
-        :param place: 場所名
+        :param argument: ゴミ
         :return: なし
         """
+        self.print_node(argument.data)
         self.arm_pub.publish()
-        self.speak("OK, I go to the {}".format(place))
+        print self.place
+        self.speak("OK, I will go to the {}.".format(self.place))
         self.arm_pub.publish(2)
         rospy.sleep(3)
         rospy.wait_for_service('/location/request_location', timeout=1)
-        rospy.ServiceProxy('/location/request_location', RequestLocation)(place)
+        coordinate = rospy.ServiceProxy('/location/request_location', RequestLocation)(self.place)
+        self.send_move_base(coordinate)
+        self.execute_function.publish("release_bag")
+
+    def save_place_info(self, place):
+        """
+        場所情報を保管するためのcallback関数
+        :param place: 場所名
+        :return: なし
+        """
+        self.place = place.data
+        print self.place
+
+    def send_move_base(self, point):
+        # type:(tuple)->int
+        goal = MoveBaseGoal()
+        goal.target_pose.header.stamp = rospy.Time.now()
+        goal.target_pose.header.frame_id = "map"
+        goal.target_pose.pose.position = Point(point[0], point[1], point[2])
+        goal.target_pose.pose.orientation = Quaternion(0, 0, 0, 1)
+        self.marker.register(goal.target_pose.pose)
+        self.move_base_client.wait_for_server()
+        print "move_baseに送信"
+        self.move_base_client.send_goal(goal)
+        self.move_base_client.wait_for_result()
+        return self.move_base_client.get_state()
 
 
 if __name__ == "__main__":
