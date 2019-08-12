@@ -10,23 +10,14 @@ class HmcBackToTheCar(AbstractModule):
     def __init__(self):
         super(HmcBackToTheCar, self).__init__(node_name="hmc_back_to_the_car")
 
-        rospy.Subscriber("/hmc_nlp/function", String, self.execute_function)
+        rospy.Subscriber("/natural_language_processing/back_to_the_car", String, self.back_to_the_car)
 
-    def execute_function(self, command):
-        # type: (String) -> None
-        """
-        hmc_nlpから実行命令がpublishされたかを確認する
-        :param: command: 実行する関数名
-        :return: なし
-        """
-        if command.data == "back_to_the_car":
-            self.print_node(command.data)
-            self.back_to_the_car()
-
-    def back_to_the_car(self):
+    def back_to_the_car(self, command):
         # type: () -> None
         """
-        human_detection終了後,協力者に説明し車に戻る
+        human_detection終了後,協力者を連れて車に戻る
+        :param: argument: 関数用の引数が格納されている.
+        本関数では空である.
         :return: なし
         """
         self.speak("I want you to help carrying groceries into the house.")

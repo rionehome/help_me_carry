@@ -10,23 +10,14 @@ class HmcRestartAskPutBag(AbstractModule):
     def __init__(self):
         super(HmcRestartAskPutBag, self).__init__(node_name="hmc_restart_ask_put_bag")
 
-        rospy.Subscriber("/hmc_nlp/function", String, self.execute_function)
+        rospy.Subscriber("/natural_language_processing/restart_ask_put_bag", String, self.restart_ask_put_bag)
 
-    def execute_function(self, command):
-        # type: (String) -> None
-        """
-        hmc_nlpから実行命令がpublishされたかを確認する
-        :param: command: 実行する関数名
-        :return: なし
-        """
-        if command.data == "restart_ask_put_bag":
-            self.print_node(command.data)
-            self.restart_ask_put_bag()
-
-    def restart_ask_put_bag(self):
+    def restart_ask_put_bag(self, argument):
         # type: () -> None
         """
         少し待った後に,再度バッグを置いたかを確認する.
+        :param: argument: 関数用の引数が格納されている.
+        本関数では空である.
         :return: なし
         """
         self.speak("OK.")

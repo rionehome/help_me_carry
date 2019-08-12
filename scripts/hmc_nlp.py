@@ -14,14 +14,11 @@ class HmcNlp(AbstractModule):
 
         self.execute_func_pub = rospy.Publisher("/hmc_nlp/function", String, queue_size=10)
         self.place_info_pub = rospy.Publisher("/hmc/control", String, queue_size=10)
-
         rospy.Subscriber("/natural_language_processing/function_argument", String, self.function_argument_callback)
         rospy.Subscriber("/navigation/goal", Bool, self.navigation_goal_callback)
         rospy.Subscriber("/human_detection/finish", Bool, self.human_detection_callback)
 
-        #self.start()
-
-
+        # self.start()
 
     def function_argument_callback(self, data):
         # type: (String) -> None
@@ -65,11 +62,21 @@ class HmcNlp(AbstractModule):
         """
         self.execute_func_pub.publish("stop_follow_me")
 
+    def restart_ask_place(self, place):
+        # type: (String) -> None
+        """
+        相手にバッグを運ぶ場所を聞き返す
+        3度聞き返してしまった場合は,全ての場所を確認する
+        :param: place: 場所名(使用しない)
+        :return: なし
+        """
+        self.execute_func_pub.publish("restart_ask_place")
+
     def ask_put_bag(self, place):
         # type: (String) -> None
         """
         バッグを置いたかどうかを確認する
-        :param place: 場所名
+        :param: place: 場所名
         :return: なし
         """
         self.place = place  # 場所情報の保存

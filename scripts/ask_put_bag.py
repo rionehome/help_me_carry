@@ -12,23 +12,14 @@ class HmcAskPutBag(AbstractModule):
 
         self.arm_pub = rospy.Publisher('/arm/control', Int32, queue_size=10)
 
-        rospy.Subscriber("/hmc_nlp/function", String, self.execute_function)
+        rospy.Subscriber("/natural_language_processing/ask_put_bag", String, self.ask_put_bag)
 
-    def execute_function(self, command):
-        # type: (String) -> None
-        """
-        hmc_nlpから実行命令がpublishされたかを確認する
-        :param: command: 実行する関数名
-        :return: なし
-        """
-        if command.data == "ask_put_bag":
-            self.print_node(command.data)
-            self.ask_put_bag()
-
-    def ask_put_bag(self):
+    def ask_put_bag(self, argument):
         # type: () -> None
         """
         バッグをアームに置いたかを確認する
+        :param: argument: 関数用の引数が格納されている.
+        本関数では空である.
         :return: なし
         """
         self.arm_pub.publish(1)

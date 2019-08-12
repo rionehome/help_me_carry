@@ -9,23 +9,14 @@ class HmcStart(AbstractModule):
     def __init__(self):
         super(HmcStart, self).__init__(node_name="hmc_start")
 
-        rospy.Subscriber("/hmc_nlp/function", String, self.execute_function)
+        rospy.Subscriber("/natural_language_processing/start", String, self.start)
 
-    def execute_function(self, command):
+    def start(self, argument):
         # type: (String) -> None
         """
-        hmc_nlpから実行命令がpublishされたかを確認する
-        :param: command: 実行する関数名
-        :return: なし
-        """
-        if command.data == "start":
-            self.print_node(command.data)
-            self.start()
-
-    def start(self):
-        # type: () -> None
-        """
         開始ノード
+        :param: argument: 関数用の引数が格納されている.
+        本関数では空である.
         :return: なし
         """
         speak_text = "Please say follow me."  # 発話文
