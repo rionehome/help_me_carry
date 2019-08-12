@@ -174,7 +174,7 @@ class HumanDetection:
                 self.speak("sorry, not found.")
                 return
             print min(self.person_position)
-            self.move_turn(min(self.person_position)[1])
+            self.move_turn(self.person_position[min(self.person_position)][1])
     
     def odometry_callback(self, msg):
         # type: (Odometry)->None
@@ -202,7 +202,7 @@ class HumanDetection:
             if result is None:
                 continue
             print self.sensor_degree
-            self.person_position.setdefault(result[0], [result[1], self.sensor_degree])
+            self.person_position.setdefault(result[0], (result[1], self.sensor_degree))
 
 
 if __name__ == '__main__':
