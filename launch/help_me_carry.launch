@@ -18,7 +18,6 @@
     </group>
 
     <group ns="help_me_carry">
-        <node pkg="help_me_carry" name="hmc_nlp" output="screen" respawn="false" type="hmc_nlp.py"/>
         <node pkg="help_me_carry" name="hmc_start" output="screen" respawn="false" type="start.py"/>
         <node pkg="help_me_carry" name="hmc_follow_me" output="screen" respawn="false" type="follow_me.py"/>
         <node pkg="help_me_carry" name="hmc_follow_me" output="screen" respawn="false" type="follow_me.py"/>
