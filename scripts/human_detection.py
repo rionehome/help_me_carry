@@ -173,6 +173,7 @@ class HumanDetection:
             if len(self.person_position) == 0:
                 self.speak("sorry, not found.")
                 return
+            print min(self.person_position)
             self.move_turn(min(self.person_position)[1])
     
     def odometry_callback(self, msg):
