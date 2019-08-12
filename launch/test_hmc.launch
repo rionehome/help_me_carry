@@ -2,6 +2,8 @@
         <node pkg="help_me_carry" name="hmc_start" output="screen" respawn="false" type="start.py"/>
         <node pkg="help_me_carry" name="hmc_follow_me" output="screen" respawn="false" type="follow_me.py"/>
         <node pkg="help_me_carry" name="hmc_stop_follow_me" output="screen" respawn="false" type="stop_follow_me.py"/>
+        <node pkg="help_me_carry" name="hmc_ask_all_places" output="screen" respawn="false" type="ask_all_places.py"/>
+        <node pkg="help_me_carry" name="hmc_restart_ask_place_bag" output="screen" respawn="false" type="restart_ask_place.py"/>
         <node pkg="help_me_carry" name="hmc_restart_ask_put_bag" output="screen" respawn="false" type="restart_ask_put_bag.py"/>
         <node pkg="help_me_carry" name="hmc_ask_put_bag" output="screen" respawn="false" type="ask_put_bag.py"/>
         <node pkg="help_me_carry" name="hmc_send_place_msg" output="screen" respawn="false" type="send_place_msg.py"/>

@@ -23,8 +23,8 @@ class HmcAskPutBag(AbstractModule):
         本関数では空である.
         :return: なし
         """
-        self.print_node(argument.data)
-        self.place_info_pub.publish(argument)
+        if argument.data is not "":
+            self.place_info_pub.publish(argument.data)
         self.arm_pub.publish(1)
         self.speak("Please put your bag in my hand.")
         time.sleep(5)
