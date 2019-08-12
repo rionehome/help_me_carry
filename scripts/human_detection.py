@@ -201,7 +201,8 @@ class HumanDetection:
             result = self.calc_person_position(pose)
             if result is None:
                 continue
-            self.person_position.setdefault(result[0], (result[1], self.sensor_degree))
+            print self.sensor_degree
+            self.person_position.setdefault(result[0], [result[1], self.sensor_degree])
 
 
 if __name__ == '__main__':
