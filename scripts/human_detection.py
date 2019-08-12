@@ -100,6 +100,8 @@ class HumanDetection:
                     sum_y += key.position.y
                     sum_z += key.position.z
                     count += 1
+            if count < 5:
+                return None
             ave_x = sum_x / count
             ave_y = sum_y / count
             ave_z = sum_z / count
@@ -174,7 +176,7 @@ class HumanDetection:
                 self.speak("sorry, not found.")
                 return
             print min(self.person_position)
-            self.move_turn(self.person_position[min(self.person_position)][1])
+            self.move_turn(self.person_position[min(self.person_position)][1] + 30)
     
     def odometry_callback(self, msg):
         # type: (Odometry)->None
