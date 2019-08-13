@@ -10,11 +10,11 @@ class HmcAskAllPlaces(AbstractModule):
         super(HmcAskAllPlaces, self).__init__(node_name="hmc_ask_all_places")
         self.place_list = ["kitchen", "bed_room", "living_room"]
         self.index = 0
-
+        
         self.place_info_pub = rospy.Publisher("/hmc/send_place_msg", String, queue_size=10)
-
+        
         rospy.Subscriber("/natural_language_processing/ask_all_places", String, self.ask_all_places)
-
+    
     def ask_all_places(self, command):
         # type: (String) -> None
         """

@@ -9,9 +9,9 @@ import time
 class HmcRestartAskPutBag(AbstractModule):
     def __init__(self):
         super(HmcRestartAskPutBag, self).__init__(node_name="hmc_restart_ask_put_bag")
-
+        
         rospy.Subscriber("/natural_language_processing/restart_ask_put_bag", String, self.restart_ask_put_bag)
-
+    
     def restart_ask_put_bag(self, argument):
         # type: (String) -> None
         """

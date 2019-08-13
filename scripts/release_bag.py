@@ -8,12 +8,12 @@ from abstract_module import AbstractModule
 class HmcReleaseBag(AbstractModule):
     def __init__(self):
         super(HmcReleaseBag, self).__init__(node_name="hmc_release_bag")
-
+        
         self.arm_pub = rospy.Publisher('/arm/control', Int32, queue_size=10)
         self.human_detection_pub = rospy.Publisher("/human_detection/start", String, queue_size=10)
-
+        
         rospy.Subscriber("/natural_language_processing/release_bag", String, self.release_bag)
-
+    
     def release_bag(self, argument):
         # type: (String) -> None
         """

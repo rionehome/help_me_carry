@@ -1,7 +1,38 @@
 <launch>
+
     <node pkg="emergency_stop" name="emergency_stop" output="screen" respawn="false" type="main.py"/>
     <include file="$(find turtlebot_bringup)/launch/minimal.launch"/>
-    <include file="$(find realsense2_camera)/launch/rs_camera.launch"/>
+
+    <include file="$(find turtlebot_custom)/launch/gmapping_lidar.launch"/>
+    <include file="$(find turtlebot_custom)/launch/lidar.launch"/>
+    <include file="$(find turtlebot_custom)/launch/rviz.launch"/>
+
+    <arg name="topic"               default="camera/image_raw" />
+    <arg name="gpu"                 default="false" />
+    <arg name="poses_topic"         default="poses" />
+    <arg name="multiplier"          default="0.5" />
+    <arg name="image_scale_factor"  default="0.5" />
+    <arg name="flip_horizontal"     default="false" />
+    <arg name="output_stride"       default="16" />
+    <arg name="max_pose"            default="5" />
+    <arg name="score_threshold"     default="0.8" />
+    <arg name="nms_radius"          default="20" />
+    <group ns="/">
+        <node pkg="ros_posenet" type="posenet.js" name="posenet" output="screen" respawn="true" >
+            <param name="topic"                 value="$(arg topic)" />
+            <param name="gpu"                   value="$(arg gpu)" />
+            <param name="poses_topic"           value="$(arg poses_topic)" />
+            <param name="multiplier"            value="$(arg multiplier)" />
+            <param name="image_scale_factor"    value="$(arg image_scale_factor)" />
+            <param name="flip_horizontal"       value="$(arg flip_horizontal)" />
+            <param name="output_stride"         value="$(arg output_stride)" />
+            <param name="max_pose"              value="$(arg max_pose)" />
+            <param name="score_threshold"       value="$(arg score_threshold)" />
+            <param name="nms_radius"            value="$(arg nms_radius)" />
+        </node>
+        <node pkg="ros_posenet" name="realsense" output="screen" respawn="true" type="realsense"/>
+    </group>
+    <node pkg="ros_posenet" name="model_server" output="screen" respawn="true" type="server.py"/>
 
     <group ns="sound_system">
         <node pkg="sound_system" name="speak" output="screen" respawn="false" type="speak.py"/>
@@ -13,9 +44,14 @@
     </group>
 
     <group ns="move">
-        <node pkg="move" name="velocity" respawn="false" type="MovementVelocityDesignation"/>
-	    <node pkg="move" name="amount" respawn="false" type="MovementAmountDesignation"/>
+        <node pkg="move" name="velocity" respawn="false" type="velocity"/>
+	    <node pkg="move" name="amount" respawn="false" type="amount"/>
     </group>
+
+    <node pkg="follow_me" name="follow_me" respawn="true" output="screen" type="follow_me"/>
+
+    <node name="nlp_main" pkg="natural_language_processing" type="main.py" output="screen" />
+    <param name="json_name" value="hmc_nlp.json"/>
 
     <group ns="help_me_carry">
         <node pkg="help_me_carry" name="hmc_start" output="screen" respawn="false" type="start.py"/>
@@ -26,8 +62,17 @@
         <node pkg="help_me_carry" name="hmc_restart_ask_put_bag" output="screen" respawn="false" type="restart_ask_put_bag.py"/>
         <node pkg="help_me_carry" name="hmc_ask_put_bag" output="screen" respawn="false" type="ask_put_bag.py"/>
         <node pkg="help_me_carry" name="hmc_send_place_msg" output="screen" respawn="false" type="send_place_msg.py"/>
-        <node pkg="help_me_carry" name="hmc_release_bag" output="screen" respawn="false" type="release_bag.py"/>
         <node pkg="help_me_carry" name="hmc_back_to_the_car" output="screen" respawn="false" type="back_to_the_car.py"/>
+        <node pkg="help_me_carry" name="hmc_human_detection" output="screen" respawn="false" type="human_detection.py"/>
     </group>
+
+    <node pkg="location" name="location" type="location_manager.py" output="screen">
+        <param name="info_file" value="mapping.txt"/>
+    </node>
+    <node pkg="mapping" name="mapping_load" type="load.py" output="screen">
+        <param name="info_file" value="mapping"/>
+    </node>
+
+    <include file="$(find realsense2_camera)/launch/rs_rgbd.launch"/>
 
 </launch>

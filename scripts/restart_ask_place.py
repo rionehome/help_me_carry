@@ -8,10 +8,10 @@ from abstract_module import AbstractModule
 class HmcRestartAskPlace(AbstractModule):
     def __init__(self):
         super(HmcRestartAskPlace, self).__init__(node_name="hmc_restart_ask_place")
-        self.loop_count = 3
-
+        self.loop_count = 1
+        
         rospy.Subscriber("/natural_language_processing/restart_ask_place", String, self.restart_ask_place)
-
+    
     def restart_ask_place(self, command):
         # type: (String) -> None
         """
@@ -28,7 +28,7 @@ class HmcRestartAskPlace(AbstractModule):
             self.nlp_pub.publish(speak_text)
             self.loop_count = 1
             return
-
+        
         self.speak("Sorry, please say the place again.")
         speak_text = "May I help you?"
         self.speak(speak_text)

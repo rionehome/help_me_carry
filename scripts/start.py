@@ -8,9 +8,9 @@ from abstract_module import AbstractModule
 class HmcStart(AbstractModule):
     def __init__(self):
         super(HmcStart, self).__init__(node_name="hmc_start")
-
+        
         rospy.Subscriber("/natural_language_processing/start", String, self.start)
-
+    
     def start(self, argument):
         # type: (String) -> None
         """

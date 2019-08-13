@@ -33,6 +33,18 @@ class HumanDetection:
         rospy.Subscriber("/odom", Odometry, self.odometry_callback)
         self.move_base_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction)
         self.amount_client = actionlib.SimpleActionClient("/move/amount", AmountAction)
+        self.finish_pub = rospy.Publisher("/human_detection/finish", String, queue_size=1)
+    
+    @staticmethod
+    def print_node(name):
+        # type: (str) -> None
+        """
+        ノード名を表示
+        :return: なし
+        """
+        print("\n###########################################\n")
+        print("     Node: {}".format(name))
+        print("\n###########################################\n")
     
     @staticmethod
     def to_angle(rad):
@@ -85,7 +97,7 @@ class HumanDetection:
         
         self.amount_client.wait_for_server()
         self.amount_client.send_goal(goal)
-        self.amount_client.wait_for_result(rospy.Duration(10))
+        self.amount_client.wait_for_result(rospy.Duration(30))
     
     def calc_person_position(self, pose):
         try:
@@ -168,15 +180,18 @@ class HumanDetection:
     ################################################################################
     def control_callback(self, msg):
         # type:(String)->None
+        self.print_node("human_detection")
         if msg.data == "start":
             self.flag = False
             self.move_turn(360)
             self.flag = True
             if len(self.person_position) == 0:
                 self.speak("sorry, not found.")
+                self.finish_pub.publish(String(data="finish"))
                 return
             print min(self.person_position)
             self.move_turn(self.person_position[min(self.person_position)][1] + 30)
+            self.finish_pub.publish(String(data="finish"))
     
     def odometry_callback(self, msg):
         # type: (Odometry)->None

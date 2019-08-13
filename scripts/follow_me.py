@@ -9,9 +9,9 @@ class HmcFollowMe(AbstractModule):
     def __init__(self):
         super(HmcFollowMe, self).__init__(node_name="hmc_follow_me")
         self.follow_me_pub = rospy.Publisher("/follow_me/control", String, queue_size=10)
-
+        
         rospy.Subscriber("/natural_language_processing/follow_me", String, self.follow_me)
-
+    
     def follow_me(self, argument):
         # type: (String) -> None
         """
@@ -22,8 +22,8 @@ class HmcFollowMe(AbstractModule):
         """
         self.print_node(argument.data)
         speak_text = "When you arrive target point, please say stop following me."
-        self.follow_me_pub.publish('start')
         self.speak(speak_text)
+        self.follow_me_pub.publish('start')
         self.nlp_pub.publish(speak_text)
 
 

@@ -1,25 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import rospy, actionlib
+import rospy
+import actionlib
 from std_msgs.msg import String
 from location.srv import *
-from abstract_module import AbstractModule
 from move.msg import AmountAction
 from move_base_msgs.msg import MoveBaseGoal, MoveBaseAction
 from geometry_msgs.msg import Point, Quaternion
+
+from abstract_module import AbstractModule
 from module.rviz_marker import RvizMarker
 
 
 class HmcBackToTheCar(AbstractModule):
     def __init__(self):
         super(HmcBackToTheCar, self).__init__(node_name="hmc_back_to_the_car")
-
+        
         self.move_base_client = actionlib.SimpleActionClient("/move_base", MoveBaseAction)
         self.amount_client = actionlib.SimpleActionClient("/move/amount", AmountAction)
         self.marker = RvizMarker()
-
-        rospy.Subscriber("/natural_language_processing/back_to_the_car", String, self.back_to_the_car)
-
+        
+        rospy.Subscriber("/human_detection/finish", String, self.back_to_the_car)
+    
     def back_to_the_car(self, argument):
         # type: (String) -> None
         """
@@ -32,16 +34,15 @@ class HmcBackToTheCar(AbstractModule):
         self.speak("I want you to help carrying groceries into the house.")
         self.speak("Please follow me.")
         rospy.wait_for_service('/location/request_location', timeout=1)
-        coordinate = rospy.ServiceProxy('/location/request_location', RequestLocation)("car")
+        coordinate = rospy.ServiceProxy('/location/request_location', RequestLocation)("car").location
         self.send_move_base(coordinate)
         self.speak("Here is the car")
-
+    
     def send_move_base(self, point):
-        # type:(tuple)->int
         goal = MoveBaseGoal()
         goal.target_pose.header.stamp = rospy.Time.now()
         goal.target_pose.header.frame_id = "map"
-        goal.target_pose.pose.position = Point(point[0], point[1], point[2])
+        goal.target_pose.pose.position = Point(point.x, point.y, point.z)
         goal.target_pose.pose.orientation = Quaternion(0, 0, 0, 1)
         self.marker.register(goal.target_pose.pose)
         self.move_base_client.wait_for_server()
