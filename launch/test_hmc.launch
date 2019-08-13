@@ -1,23 +1,4 @@
 <launch>
-    <node pkg="emergency_stop" name="emergency_stop" output="screen" respawn="false" type="main.py"/>
-    <include file="$(find turtlebot_bringup)/launch/minimal.launch"/>
-    <include file="$(find realsense2_camera)/launch/rs_camera.launch"/>
-
-    <group ns="sound_system">
-        <node pkg="sound_system" name="speak" output="screen" respawn="false" type="speak.py"/>
-        <node pkg="sound_system" name="sphinx" type="sphinx.py" output="screen">
-            <param name="dict" value="follow_me_sphinx.dict"/>
-            <param name="gram" value="follow_me_sphinx.gram"/>
-        </node>
-        <node pkg="sound_system" name="log" output="screen" respawn="false" type="log.py"/>
-    </group>
-
-    <group ns="move">
-        <node pkg="move" name="velocity" respawn="false" type="MovementVelocityDesignation"/>
-	    <node pkg="move" name="amount" respawn="false" type="MovementAmountDesignation"/>
-    </group>
-
-    <group ns="help_me_carry">
         <node pkg="help_me_carry" name="hmc_start" output="screen" respawn="false" type="start.py"/>
         <node pkg="help_me_carry" name="hmc_follow_me" output="screen" respawn="false" type="follow_me.py"/>
         <node pkg="help_me_carry" name="hmc_stop_follow_me" output="screen" respawn="false" type="stop_follow_me.py"/>
@@ -28,6 +9,4 @@
         <node pkg="help_me_carry" name="hmc_send_place_msg" output="screen" respawn="false" type="send_place_msg.py"/>
         <node pkg="help_me_carry" name="hmc_release_bag" output="screen" respawn="false" type="release_bag.py"/>
         <node pkg="help_me_carry" name="hmc_back_to_the_car" output="screen" respawn="false" type="back_to_the_car.py"/>
-    </group>
-
 </launch>
