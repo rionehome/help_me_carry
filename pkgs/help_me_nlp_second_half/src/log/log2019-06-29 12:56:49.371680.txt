@@ -1,5 +1,0 @@
-2019-06-29 12:57:29.806721	robot heard:follow me
-2019-06-29 12:57:29.807545	robot spoke:OK. Thank you.
-2019-06-29 12:57:35.429392	robot heard:yes
-2019-06-29 12:57:35.429875	robot spoke:Thank you. I will guide you to the car. Please follow me.
-2019-06-29 12:57:37.702156	robot spoke:Would you help carrying groceries into the house? Please answer yes or no.

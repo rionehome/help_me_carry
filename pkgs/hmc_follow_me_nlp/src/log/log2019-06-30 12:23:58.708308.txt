@@ -1,8 +1,0 @@
-2019-06-30 12:25:52.665670	robot heard:follow me
-2019-06-30 12:25:52.666401	robot spoke:Should I start following you?
-2019-06-30 12:25:59.308910	robot heard:follow me
-2019-06-30 12:25:59.309477	robot spoke:Should I start following you?
-2019-06-30 12:26:07.584529	robot heard:follow me
-2019-06-30 12:26:07.585107	robot spoke:Should I start following you?
-2019-06-30 12:26:47.350350	robot heard:no
-2019-06-30 12:26:47.350955	robot spoke:OK. Please say the command again.

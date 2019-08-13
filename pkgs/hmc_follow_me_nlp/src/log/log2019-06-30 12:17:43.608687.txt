@@ -1,2 +1,0 @@
-2019-06-30 12:18:26.086832	robot heard:follow me
-2019-06-30 12:18:26.087610	robot spoke:Should I start following you?
