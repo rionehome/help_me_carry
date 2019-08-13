@@ -57,6 +57,7 @@
     <param name="json_name" value="hmc_nlp.json"/>
 
     <group ns="help_me_carry">
+        <node pkg="help_me_carry" name="trigger" output="screen" respawn="false" type="trigger.py"/>
         <node pkg="help_me_carry" name="hmc_start" output="screen" respawn="false" type="start.py"/>
         <node pkg="help_me_carry" name="hmc_follow_me" output="screen" respawn="false" type="follow_me.py"/>
         <node pkg="help_me_carry" name="hmc_stop_follow_me" output="screen" respawn="false" type="stop_follow_me.py"/>
