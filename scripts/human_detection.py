@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: UTF-8
 import math
+import time
 
 from move.msg import AmountGoal, AmountAction
 from move_base_msgs.msg import MoveBaseGoal, MoveBaseAction
@@ -93,7 +94,7 @@ class HumanDetection:
         """
         goal = AmountGoal()
         goal.amount.angle = angle
-        goal.velocity.angular_rate = 0.3
+        goal.velocity.angular_rate = 0.4
         
         self.amount_client.wait_for_server()
         self.amount_client.send_goal(goal)
@@ -106,19 +107,22 @@ class HumanDetection:
             sum_x = 0
             sum_y = 0
             sum_z = 0
+            image_sum_x = 0
             for key in pose.keypoints:
                 if key.part in self.point_list:
                     sum_x += key.position.x
                     sum_y += key.position.y
                     sum_z += key.position.z
+                    image_sum_x += key.image_position.x
                     count += 1
-            if count < 5:
+            if count < 4:
                 return None
             ave_x = sum_x / count
             ave_y = sum_y / count
             ave_z = sum_z / count
+            ave_image_x = image_sum_x / count
             distance = math.sqrt(ave_x ** 2 + ave_y ** 2 + ave_z ** 2)
-            return distance, (ave_x, ave_y, ave_z)
+            return distance, (ave_x, ave_y, ave_z), ave_image_x
         except ZeroDivisionError:
             print "countが0 @raise_hand"
         return None
@@ -183,14 +187,17 @@ class HumanDetection:
         self.print_node("human_detection")
         if msg.data == "start":
             self.flag = False
-            self.move_turn(360)
+            for i in range(360 // 45):
+                self.move_turn(45)
+                time.sleep(1)
             self.flag = True
             if len(self.person_position) == 0:
                 self.speak("sorry, not found.")
                 self.finish_pub.publish(String(data="finish"))
                 return
             print min(self.person_position)
-            self.move_turn(self.person_position[min(self.person_position)][1] + 30)
+            self.move_turn(self.person_position[min(self.person_position)][1] - self.sensor_degree)
+            self.speak("Done.")
             self.finish_pub.publish(String(data="finish"))
     
     def odometry_callback(self, msg):
@@ -218,8 +225,11 @@ class HumanDetection:
             result = self.calc_person_position(pose)
             if result is None:
                 continue
+            if not 300 < result[2] < 400:
+                continue
             print self.sensor_degree
             self.person_position.setdefault(result[0], (result[1], self.sensor_degree))
+            self.speak("found")
 
 
 if __name__ == '__main__':
