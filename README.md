@@ -35,8 +35,7 @@ follow me終了Subscriber, 空文字をpublishすることで起動.
 
 - `/natural_language_processing/ask_all_places` (std_msgs/String)  
 場所情報を相手に全て確認する, 空文字をpublishすることで起動.  
-"take this bag..."の音声認識結果を相手に確認した際に,3回否定された場合に
-されたばあいに全ての場所を相手に聞く.  
+"take this bag..."の音声認識結果を相手に確認した際に,3回否定された場合に全ての場所を相手に聞く.  
 まず,呼び出されることはない.
 
 - `/natural_language_processing/release_bag` (std_msgs/String)
