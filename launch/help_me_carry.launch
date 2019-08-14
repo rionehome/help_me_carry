@@ -7,6 +7,9 @@
     <include file="$(find turtlebot_custom)/launch/lidar.launch"/>
     <include file="$(find turtlebot_custom)/launch/rviz.launch"/>
 
+    <include file="$(find crane_plus_hardware)/launch/start_arm_standalone.launch"/>
+    <node pkg="arm" name="arm" type="main.py" output="screen"/>
+
     <arg name="topic"               default="camera/image_raw" />
     <arg name="gpu"                 default="false" />
     <arg name="poses_topic"         default="poses" />
