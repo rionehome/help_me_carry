@@ -8,7 +8,7 @@ from abstract_module import AbstractModule
 class HmcAskAllPlaces(AbstractModule):
     def __init__(self):
         super(HmcAskAllPlaces, self).__init__(node_name="hmc_ask_all_places")
-        self.place_list = ["kitchen", "bed_room", "living_room"]
+        self.place_list = ["dining_room", "living_room"]
         self.index = 0
         
         self.place_info_pub = rospy.Publisher("/hmc/send_place_msg", String, queue_size=10)
